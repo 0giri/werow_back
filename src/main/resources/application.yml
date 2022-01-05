@@ -1,11 +1,11 @@
 spring:
-#  mvc:
-#    pathmatch:
-#      matching-strategy: ant_path_matcher
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://0giri.com:3306/werow?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Seoul
-    username: giri
+    url: jdbc:mysql://localhost:3306/werow?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Seoul
+    username: root
     password: 9463
   jpa:
     hibernate:
@@ -15,6 +15,9 @@ spring:
 #        use-new-id-generator-mappings: false
 #        show_sql: true
         format_sql: true
+  sql:
+    init:
+      mode: never
 
 logging:
   level:
