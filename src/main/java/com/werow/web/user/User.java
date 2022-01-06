@@ -20,8 +20,9 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 10, nullable = false)
-    private UserType type;
+    private UserType type = UserType.BASIC;
 
     @OneToOne(mappedBy = "user")
     private Freelancer freelancer;
+
 }
