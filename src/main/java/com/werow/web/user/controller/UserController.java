@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -30,13 +31,15 @@ public class UserController {
     private final HttpUtils httpUtils;
 
     @GetMapping("/kakao-form")
-    public String getKakaoLoginForm() {
+    public String getKakaoLoginForm(HttpServletRequest request) {
         String url = "https://kauth.kakao.com/oauth/authorize?";
 
+        System.out.println();
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("client_id", "e485731066d013c1fc6faaf79bfc6d04");
-        paramsMap.put("redirect_uri", "http://localhost:8080/login/kakao");
+        paramsMap.put("redirect_uri", request.getRemoteHost() + "/login/kakao");
         paramsMap.put("response_type", "code");
+
 
         return "redirect:" + url + httpUtils.mapToQueryString(paramsMap);
     }
