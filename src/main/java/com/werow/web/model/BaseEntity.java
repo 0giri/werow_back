@@ -15,10 +15,10 @@ public abstract class BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String createdBy;
-    private LocalDateTime createdDate;
-    private String lastModifiedBy;
-    private LocalDateTime lastModifiedDate;
+    protected String createdBy;
+    protected LocalDateTime createdDate;
+    protected String lastModifiedBy;
+    protected LocalDateTime lastModifiedDate;
 
     public boolean isNew() {
         return this.id == null;
