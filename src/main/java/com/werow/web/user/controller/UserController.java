@@ -25,11 +25,11 @@ public class UserController {
     public String getKakaoLoginForm(HttpServletRequest request) {
 //        log.info("Client IP: {}");
         String url = "https://kauth.kakao.com/oauth/authorize?";
-        String hostName = httpUtils.getServerHostName(request);
+//        String hostName = httpUtils.getServerHostName(request);
 
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("client_id", "e485731066d013c1fc6faaf79bfc6d04");
-        paramsMap.put("redirect_uri", hostName + "/login/kakao");
+        paramsMap.put("redirect_uri", "http://localhost:8888/login/kakao");
         paramsMap.put("response_type", "code");
 
         return "redirect:" + url + httpUtils.mapToQueryString(paramsMap);
