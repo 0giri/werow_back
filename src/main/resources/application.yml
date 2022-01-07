@@ -22,7 +22,7 @@ logging:
   level:
     org.hibernate.SQL: debug
 #    org.hibernate.type: trace
-    com.werow.web : debug
+#    com.werow.web : debug # 배포시에만 주석
 
 server:
   port: 8888

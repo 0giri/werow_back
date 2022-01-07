@@ -1,5 +1,8 @@
 package com.werow.web.commons;
 
+import com.werow.web.user.domain.User;
+import com.werow.web.user.domain.UserRole;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -7,13 +10,35 @@ import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
-@Slf4j
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Optional;
+
 @Service
 @Aspect
+@Slf4j
+@RequiredArgsConstructor
 public class LogAdvice {
+
+    private final HttpUtils httpUtils;
+    private final HttpServletRequest request;
+    private final HttpSession session;
 
     @Pointcut("execution(* com.werow.web..*Controller.*(..))")
     public void controllerPointcut() {
+    }
+
+    @Before("controllerPointcut()")
+    public void beforeInfoLog() {
+        String clientIP = httpUtils.getClientIP(request);
+
+        String userRole = "Guest";
+        User loginedUser = (User) session.getAttribute("user");
+        if (loginedUser != null) {
+            userRole = loginedUser.getRole().toString();
+        }
+
+        log.info("[IP] {} - [Role] {}", clientIP, userRole);
     }
 
     @Before("controllerPointcut()")

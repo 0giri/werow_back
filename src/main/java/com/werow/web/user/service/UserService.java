@@ -39,6 +39,7 @@ public class UserService {
             userRepository.save(user);
         }
 
+        request.getSession().setAttribute("user", user);
 
 
 
