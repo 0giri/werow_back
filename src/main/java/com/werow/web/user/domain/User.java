@@ -45,10 +45,15 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "user")
     private Freelancer freelancer;
 
-    public void initBaseEntity(String userIP) {
+    public void setCreatedInfo(String userIP) {
         this.createdBy = userIP;
         this.createdDate = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         this.lastModifiedBy = userIP;
         this.lastModifiedDate = createdDate;
+    }
+
+    public void setModifiedInfo(String userIP) {
+        this.lastModifiedBy = userIP;
+        this.lastModifiedDate = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 }

@@ -7,6 +7,7 @@ import com.werow.web.user.dto.KakaoUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class KakaoOAuth2 {
 
     private final HttpUtils httpUtils;
+    private final HttpServletRequest request;
 
     public KakaoUserInfo getKakaoUserInfo(String authorizedCode) {
         String accessToken = getAccessToken(authorizedCode);
@@ -38,10 +40,11 @@ public class KakaoOAuth2 {
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
 
             // Query Parameter
+            String hostName = httpUtils.getServerHostName(request);
             Map<String, Object> paramsMap = new HashMap<>();
             paramsMap.put("grant_type", "authorization_code");
             paramsMap.put("client_id", "e485731066d013c1fc6faaf79bfc6d04");
-            paramsMap.put("redirect_uri", "http://localhost:8080/login/kakao");
+            paramsMap.put("redirect_uri", hostName + "/login/kakao");
             paramsMap.put("code", authorizedCode);
             httpUtils.setRequestBody(con, paramsMap);
 

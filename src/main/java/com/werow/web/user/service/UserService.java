@@ -35,7 +35,7 @@ public class UserService {
         if (user == null) {
             String encodedPassword = passwordEncoder.encode(email);
             user = new User(email, nickname, encodedPassword, photo, UserRole.USER, AuthProvider.KAKAO);
-            user.initBaseEntity(httpUtils.getClientIp(request));
+            user.setCreatedInfo(httpUtils.getClientIP(request));
             userRepository.save(user);
         }
 

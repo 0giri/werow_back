@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -62,7 +64,7 @@ public class HttpUtils {
         return result;
     }
 
-    public String getClientIp(HttpServletRequest request) {
+    public String getClientIP(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
         if (ip == null) {
             ip = request.getHeader("Proxy-Client-IP");
@@ -80,5 +82,11 @@ public class HttpUtils {
             ip = request.getRemoteAddr();
         }
         return ip;
+    }
+
+    public String getServerHostName(HttpServletRequest request) {
+        StringBuffer requestURL = request.getRequestURL();
+        String requestURI = request.getRequestURI();
+        return requestURL.substring(0, requestURL.indexOf(requestURI));
     }
 }
