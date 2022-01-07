@@ -8,6 +8,7 @@ import com.werow.web.user.dto.KakaoUserInfo;
 import com.werow.web.user.provider.kakao.KakaoOAuth2;
 import com.werow.web.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final HttpUtils httpUtils;
@@ -32,20 +34,18 @@ public class UserService {
         String photo = kakaoUserInfo.getPhoto();
 
         User user = userRepository.findByEmail(kakaoUserInfo.getEmail()).orElse(null);
+        String action = "Login";
+
         if (user == null) {
             String encodedPassword = passwordEncoder.encode(email);
             user = new User(email, nickname, encodedPassword, photo, UserRole.USER, AuthProvider.KAKAO);
             user.setCreatedInfo(httpUtils.getClientIP(request));
             userRepository.save(user);
+            action = "Join";
         }
 
+        log.info("[{}] id: {}, email:{}, role:{}, provider:{}",action, user.getId(), user.getEmail(), user.getRole(), user.getProvider());
         request.getSession().setAttribute("user", user);
-
-
-
-//        Authentication kakaoUsernamePassword = new UsernamePasswordAuthenticationToken(username, password);
-//        Authentication authentication = authenticationManager.authenticate(kakaoUsernamePassword);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
 //
