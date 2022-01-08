@@ -42,7 +42,7 @@ public class User extends BaseEntity {
     @Column(length = 10, nullable = false)
     private AuthProvider provider;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Freelancer freelancer;
 
     public void setCreatedInfo(String userIP) {

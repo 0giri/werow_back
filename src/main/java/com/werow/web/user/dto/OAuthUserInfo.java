@@ -1,12 +1,13 @@
 package com.werow.web.user.dto;
 
+import com.werow.web.user.domain.AuthProvider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class KakaoUserInfo {
+public class OAuthUserInfo {
     String email;
-    String nickname;
     String photo;
+    AuthProvider provider;
 }

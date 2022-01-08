@@ -2,8 +2,8 @@ package com.werow.web.user.provider.kakao;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.werow.web.commons.HttpUtils;
-import com.werow.web.exception.FailedLoginException;
-import com.werow.web.user.dto.KakaoUserInfo;
+import com.werow.web.user.domain.AuthProvider;
+import com.werow.web.user.dto.OAuthUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,15 +20,18 @@ public class KakaoOAuth2 {
     private final HttpUtils httpUtils;
     private final HttpServletRequest request;
 
-    public KakaoUserInfo getKakaoUserInfo(String authorizedCode) {
-        String accessToken = getAccessToken(authorizedCode);
+    /**
+     * 카카오 연동하여 유저 정보 반환
+     */
+    public OAuthUserInfo getKakaoUserInfo(String authCode) {
+        String accessToken = getAccessToken(authCode);
         return getUserInfoByToken(accessToken);
     }
 
     /**
      * Authorized Code로 Access Token 요청
      */
-    private String getAccessToken(String authorizedCode) {
+    private String getAccessToken(String authCode) {
         String accessToken = null;
         try {
             // Create Connection
@@ -44,8 +47,8 @@ public class KakaoOAuth2 {
             Map<String, Object> paramsMap = new HashMap<>();
             paramsMap.put("grant_type", "authorization_code");
             paramsMap.put("client_id", "e485731066d013c1fc6faaf79bfc6d04");
-            paramsMap.put("redirect_uri", hostName + "/login/kakao");
-            paramsMap.put("code", authorizedCode);
+            paramsMap.put("redirect_uri", hostName + "/oauth/kakao");
+            paramsMap.put("code", authCode);
             httpUtils.setRequestBody(con, paramsMap);
 
             // Get Response
@@ -60,8 +63,8 @@ public class KakaoOAuth2 {
     /**
      * Access Token으로 유저 정보 요청
      */
-    private KakaoUserInfo getUserInfoByToken(String accessToken) {
-        KakaoUserInfo kakaoUserInfo = null;
+    public OAuthUserInfo getUserInfoByToken(String accessToken) {
+        OAuthUserInfo oAuthUserInfo = null;
         try {
             // Create Connection
             HttpURLConnection con = httpUtils.createConnection("https://kapi.kakao.com/v2/user/me");
@@ -74,14 +77,13 @@ public class KakaoOAuth2 {
 
             JsonNode kakaoAccount = httpUtils.executeRequest(con).get("kakao_account");
             String email = kakaoAccount.get("email").asText();
-            String nickname = kakaoAccount.get("profile").get("nickname").asText();
             String photo = kakaoAccount.get("profile").get("profile_image_url").asText();
 
-            kakaoUserInfo = new KakaoUserInfo(email, nickname, photo);
+            oAuthUserInfo = new OAuthUserInfo(email, photo, AuthProvider.KAKAO);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return kakaoUserInfo;
+        return oAuthUserInfo;
     }
 
 }
