@@ -9,7 +9,7 @@
     <property name="LOG_BACKUP" value="${user.home}/log/backup"/>
     <property name="MAX_HISTORY" value="30"/>
     <property name="LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %green([%thread]) %highlight(%-5level) %magenta(%logger{35}) - %msg%n"/>
+s              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %green([%thread]) %highlight(%-5level) %magenta(%logger{0}) - %msg%n"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

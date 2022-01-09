@@ -29,16 +29,16 @@ public class LogAdvice {
     }
 
     @Before("controllerPointcut()")
-    public void beforeInfoLog() {
+    public void beforeInfoLog(JoinPoint joinPoint) {
         String clientIP = httpUtils.getClientIP(request);
-
         String userRole = "Guest";
         User loginedUser = (User) session.getAttribute("user");
         if (loginedUser != null) {
             userRole = loginedUser.getRole().toString();
         }
+        String method = joinPoint.getSignature().toShortString();
 
-        log.info("[IP] {} - [Role] {}", clientIP, userRole);
+        log.info("[IP] {} , [Role] {} , [Request] {}", clientIP, userRole, method);
     }
 
     @Before("controllerPointcut()")
