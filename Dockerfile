@@ -1,4 +1,4 @@
-FROM java:11
+FROM openjdk
 EXPOSE 8080
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
