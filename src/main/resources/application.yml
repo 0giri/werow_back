@@ -5,12 +5,13 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: jdbc:mysql://localhost:3306/werow?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
-    url: jdbc:mysql://mysql:3306/werow?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://${DB_HOST:localhost}:3306/werow?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username: giri
     password: 9463
   jpa:
     hibernate:
-      ddl-auto: create-drop
+#      ddl-auto: create-drop # 배포시 주석
+      ddl-auto: ${DDL_AUTO:create-drop}
     properties:
       hibernate:
 #        show_sql: true
@@ -21,9 +22,9 @@ spring:
 
 logging:
   level:
-    org.hibernate.SQL: debug
+    org.hibernate.SQL: ${VIEW_SQL:debug} # 배포시 주석
+    com.werow.web : ${VIEW_DEBUG:debug} # 배포시 주석
 #    org.hibernate.type: trace
-#    com.werow.web : debug # 배포시에만 주석
 
 server:
   port: 8080
