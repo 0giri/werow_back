@@ -25,4 +25,4 @@ logging:
 #    com.werow.web : debug # 배포시에만 주석
 
 server:
-  port: 8888
+  port: 8080
