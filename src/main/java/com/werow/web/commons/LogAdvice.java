@@ -1,7 +1,6 @@
 package com.werow.web.commons;
 
-import com.werow.web.user.domain.User;
-import com.werow.web.user.domain.UserRole;
+import com.werow.web.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -12,7 +11,6 @@ import org.springframework.util.StopWatch;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @Service
 @Aspect
@@ -32,7 +30,7 @@ public class LogAdvice {
     public void beforeInfoLog(JoinPoint joinPoint) {
         String clientIP = httpUtils.getClientIP(request);
         String userRole = "Guest";
-        User loginedUser = (User) session.getAttribute("user");
+        Member loginedUser = (Member) session.getAttribute("user");
         if (loginedUser != null) {
             userRole = loginedUser.getRole().toString();
         }
