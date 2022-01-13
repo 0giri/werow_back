@@ -1,9 +1,7 @@
 package com.werow.web.config;
 
-import com.werow.web.jwt.JwtAccessDeniedHandler;
-import com.werow.web.jwt.JwtAuthenticationEntryPoint;
-import com.werow.web.jwt.JwtSecurityConfig;
-import com.werow.web.jwt.TokenProvider;
+import com.werow.web.auth.jwt.JwtSecurityConfig;
+import com.werow.web.auth.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

@@ -1,4 +1,4 @@
-package com.werow.web.jwt;
+package com.werow.web.auth.jwt;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

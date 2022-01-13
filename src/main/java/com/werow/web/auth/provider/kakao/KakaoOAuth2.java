@@ -2,7 +2,7 @@ package com.werow.web.auth.provider.kakao;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.werow.web.commons.HttpUtils;
-import com.werow.web.sub.AuthProvider;
+import com.werow.web.entity.enums.AuthProvider;
 import com.werow.web.dto.OAuthUserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;

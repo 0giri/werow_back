@@ -2,8 +2,8 @@ package com.werow.web.controller;
 
 import com.werow.web.dto.LoginDto;
 import com.werow.web.dto.TokenDto;
-import com.werow.web.jwt.JwtFilter;
-import com.werow.web.jwt.TokenProvider;
+import com.werow.web.auth.jwt.JwtFilter;
+import com.werow.web.auth.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

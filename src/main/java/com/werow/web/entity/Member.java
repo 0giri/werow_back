@@ -1,9 +1,7 @@
 package com.werow.web.entity;
 
-import com.werow.web.entity.BaseEntity;
-import com.werow.web.entity.Freelancer;
-import com.werow.web.sub.AuthProvider;
-import com.werow.web.sub.MemberRole;
+import com.werow.web.entity.enums.AuthProvider;
+import com.werow.web.entity.enums.MemberRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

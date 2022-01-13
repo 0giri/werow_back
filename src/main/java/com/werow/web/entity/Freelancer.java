@@ -1,6 +1,6 @@
 package com.werow.web.entity;
 
-import com.werow.web.sub.BusinessKind;
+import com.werow.web.entity.enums.BusinessKind;
 import lombok.Getter;
 
 import javax.persistence.*;

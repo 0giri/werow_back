@@ -1,6 +1,6 @@
 package com.werow.web.dto;
 
-import com.werow.web.sub.AuthProvider;
+import com.werow.web.entity.enums.AuthProvider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

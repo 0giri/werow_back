@@ -1,4 +1,4 @@
-package com.werow.web.jwt;
+package com.werow.web.auth.jwt;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

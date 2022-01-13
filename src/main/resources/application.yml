@@ -13,6 +13,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: ${DDL_AUTO:create-drop}
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     properties:
       hibernate:
         show_sql: true
