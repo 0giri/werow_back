@@ -18,25 +18,35 @@ public class User extends BaseInfo {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Email
     @Column(unique = true, nullable = false)
     private String email;
+
     @Column(unique = true, nullable = false)
     private String nickname;
+
     @Column(nullable = false)
     private String password;
+
     private String photo;
+
     @Column(nullable = false)
     private Boolean activated = true;
+
     @Column(nullable = false)
     private boolean emailVerified = false;
+
+    private String refreshToken;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.CUSTOMER;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
-    private String providerId;
+
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Freelancer freelancer;
 
@@ -63,6 +73,10 @@ public class User extends BaseInfo {
     public void setModifiedInfo(String userIP) {
         this.lastModifiedBy = userIP;
         this.lastModifiedDate = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
 }

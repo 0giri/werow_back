@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SecurityException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +24,9 @@ import java.util.Date;
 public class JwtUtils implements InitializingBean {
 
     private final String SECRET_KEY;
+    @Getter
     private final long ACCESS_TOKEN_EXPIRATION_MS;
+    @Getter
     private final long REFRESH_TOKEN_EXPIRATION_MS;
     private Key key;
 
@@ -32,11 +35,11 @@ public class JwtUtils implements InitializingBean {
      */
     public JwtUtils(
             @Value("${jwt.secret-key}") String secretKey,
-            @Value("${jwt.access-expiration-min}") long accessTokenExpirationMin,
-            @Value("${jwt.refresh-expiration-min}") long refreshTokenExpirationMin) {
+            @Value("${jwt.access-expiration-sec}") long accessTokenExpirationSec,
+            @Value("${jwt.refresh-expiration-sec}") long refreshTokenExpirationSec) {
         this.SECRET_KEY = secretKey;
-        this.ACCESS_TOKEN_EXPIRATION_MS = accessTokenExpirationMin * 60 * 1000;
-        this.REFRESH_TOKEN_EXPIRATION_MS = refreshTokenExpirationMin * 60 * 1000;
+        this.ACCESS_TOKEN_EXPIRATION_MS = accessTokenExpirationSec * 1000;
+        this.REFRESH_TOKEN_EXPIRATION_MS = accessTokenExpirationSec * 1000;
     }
 
     /**
@@ -49,24 +52,28 @@ public class JwtUtils implements InitializingBean {
     }
 
     public String createAccessToken(User user) {
-        return createToken(user, ACCESS_TOKEN_EXPIRATION_MS);
-    }
-
-    public String createRefreshToken(User user) {
-        return createToken(user, REFRESH_TOKEN_EXPIRATION_MS);
-    }
-
-    private String createToken(User user, Long expirationMs) {
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setIssuer("0giri")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_MS))
+                .setSubject(String.valueOf(user.getId()))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    public String createRefreshToken(User user) {
+        return Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setIssuer("0giri")
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_MS))
                 .setSubject(String.valueOf(user.getId()))
                 .claim("email", user.getEmail())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
+
 
     public boolean validateToken(HttpServletRequest request) {
         String token = resolveToken(request);

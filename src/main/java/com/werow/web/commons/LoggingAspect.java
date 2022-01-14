@@ -40,24 +40,6 @@ public class LoggingAspect {
         log.info("[IP] {} , [Role] {} , [Request] {}", clientIP, userRole, method);
     }
 
-    @Before("controllerPointcut()")
-    public void beforeLog(JoinPoint joinPoint) {
-        try {
-            String method = joinPoint.getSignature().toString();
-            StringBuilder sb = new StringBuilder();
-            Object[] args = joinPoint.getArgs();
-            if (args.length > 0) {
-                for (Object obj : args) {
-                    sb.append(obj + ", ");
-                }
-                sb.deleteCharAt(sb.lastIndexOf(","));
-            }
-            log.debug("[BEFORE] {} | [ARGS] : {}", method, sb);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Around("controllerPointcut()")
     public Object aroundLog(ProceedingJoinPoint pjp) throws Throwable {
         String method = pjp.getSignature().toShortString();
@@ -73,9 +55,27 @@ public class LoggingAspect {
         return obj;
     }
 
-    @AfterReturning(pointcut = "controllerPointcut()", returning = "returnObj")
-    public void afterLog(JoinPoint joinPoint, Object returnObj) {
-        String shortMethod = joinPoint.getSignature().toShortString();
-        log.debug("[AFTER] {} | [RETURN] : {}", shortMethod, returnObj);
-    }
+//    @Before("controllerPointcut()")
+//    public void beforeLog(JoinPoint joinPoint) {
+//        try {
+//            String method = joinPoint.getSignature().toString();
+//            StringBuilder sb = new StringBuilder();
+//            Object[] args = joinPoint.getArgs();
+//            if (args.length > 0) {
+//                for (Object obj : args) {
+//                    sb.append(obj + ", ");
+//                }
+//                sb.deleteCharAt(sb.lastIndexOf(","));
+//            }
+//            log.debug("[BEFORE] {} | [ARGS] : {}", method, sb);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+//    @AfterReturning(pointcut = "controllerPointcut()", returning = "returnObj")
+//    public void afterLog(JoinPoint joinPoint, Object returnObj) {
+//        String shortMethod = joinPoint.getSignature().toShortString();
+//        log.debug("[AFTER] {} | [RETURN] : {}", shortMethod, returnObj);
+//    }
 }
