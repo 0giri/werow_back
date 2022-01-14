@@ -12,7 +12,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @SpringBootApplication
 public class WebApplication {
 
-    @GetMapping("/")
+    @GetMapping("/api")
     public String home() {
         return "redirect:/swagger-ui.html";
     }

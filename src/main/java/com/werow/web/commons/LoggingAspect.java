@@ -6,17 +6,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-@Service
 @Aspect
+@Component
 @Slf4j
 @RequiredArgsConstructor
-public class LogAdvice {
+public class LoggingAspect {
 
     private final HttpUtils httpUtils;
     private final HttpServletRequest request;

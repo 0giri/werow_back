@@ -1,13 +1,14 @@
 package com.werow.web.account.controller;
 
 import com.werow.web.account.entity.User;
-import com.werow.web.account.repository.MemberRepository;
+import com.werow.web.account.repository.UserRepository;
+import com.werow.web.auth.TokenRequired;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -16,12 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/users")
 public class MemberController {
 
-    private final MemberRepository memberRepository;
+    private final UserRepository userRepository;
 
     @PostMapping
     public Long joinUser(User user) {
-        User saveUser = memberRepository.save(user);
+        User saveUser = userRepository.save(user);
         return saveUser.getId();
+    }
+
+    @TokenRequired
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
 }
