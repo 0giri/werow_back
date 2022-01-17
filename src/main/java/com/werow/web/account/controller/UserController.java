@@ -40,7 +40,7 @@ public class UserController {
         return ResponseEntity.ok(userDtoList);
     }
 
-    @ApiOperation(value = "회원 가입", notes = "회원 가입 폼 데이터 기반 회원 등록")
+    @ApiOperation(value = "회원 가입", notes = "회원 가입 폼 기반 회원 등록")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResponse> join(@RequestBody JoinRequest joinRequest) {
         LoginResponse loginResponse = userService.join(joinRequest);
@@ -54,7 +54,7 @@ public class UserController {
         return ResponseEntity.ok(findUser.userToDto());
     }
 
-    @ApiOperation(value = "ID 회원 조회", notes = "ID로 특정 회원 정보 조회")
+    @ApiOperation(value = "회원 조회", notes = "ID로 특정 회원 정보 조회")
     @RoleUser
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {

@@ -53,17 +53,22 @@ public class FreelancerService {
         return new FreelancerDto(findUser, freelancer);
     }
 
-    public void activateFreelancer() {
-        TokenInfo tokenInfo = jwtUtils.getTokenInfo(request);
-        Freelancer findFreelancer = freelancerRepository.findById(tokenInfo.getId()).orElseThrow(
+    public void activateFreelancer(Long id) {
+        Freelancer findFreelancer = freelancerRepository.findById(id).orElseThrow(
                 () -> new NotJoinedUserException("해당 ID를 가진 회원이 없습니다."));
         findFreelancer.activate();
     }
 
-    public void deactivateFreelancer() {
+    public void deactivateFreelancer(Long id) {
+        Freelancer findFreelancer = freelancerRepository.findById(id).orElseThrow(
+                () -> new NotJoinedUserException("해당 ID를 가진 회원이 없습니다."));
+        findFreelancer.deactivate();
+    }
+
+    public FreelancerDto findByToken() {
         TokenInfo tokenInfo = jwtUtils.getTokenInfo(request);
         Freelancer findFreelancer = freelancerRepository.findById(tokenInfo.getId()).orElseThrow(
                 () -> new NotJoinedUserException("해당 ID를 가진 회원이 없습니다."));
-        findFreelancer.deactivate();
+        return findFreelancer.freelancerToDto();
     }
 }

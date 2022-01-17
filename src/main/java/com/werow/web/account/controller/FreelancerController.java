@@ -26,7 +26,7 @@ public class FreelancerController {
 
     private final FreelancerService freelancerService;
 
-    @ApiOperation(value = "모든 프리랜서 정보 조회", notes = "모든 프리랜서 정보 조회")
+    @ApiOperation(value = "모든 프리랜서 조회", notes = "모든 프리랜서 정보 조회")
     @RoleManager
     @GetMapping
     public ResponseEntity<List<FreelancerDto>> getAllFreelancers() {
@@ -34,14 +34,22 @@ public class FreelancerController {
         return ResponseEntity.ok(freelancerDtoList);
     }
 
-    @ApiOperation(value = "프리랜서 등록", notes = "회원 가입 폼 데이터 기반 회원 등록")
+    @ApiOperation(value = "프리랜서 등록", notes = "프리랜서 등록 폼 기반 프리랜서 등록")
     @RoleUser
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void regFreelancer(@RequestBody RegRequest regRequest) {
         freelancerService.registerFreelancer(regRequest);
     }
 
-    @ApiOperation(value = "프리랜서 정보 조회", notes = "회원 ID로 프리랜서 정보 조회")
+    @ApiOperation(value = "JWT 프리랜서 조회", notes = "JWT로 프리랜서 정보 조회")
+    @RoleFreelancer
+    @GetMapping(value = "/token",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<FreelancerDto> getFreelancerByToken() {
+        FreelancerDto findFreelancer = freelancerService.findByToken();
+        return ResponseEntity.ok(findFreelancer);
+    }
+
+    @ApiOperation(value = "프리랜서 조회", notes = "회원 ID로 프리랜서 정보 조회")
     @RoleFreelancer
     @GetMapping("/{id}")
     public ResponseEntity<FreelancerDto> getFreelancerByUserId(@PathVariable Long id) {
@@ -49,23 +57,18 @@ public class FreelancerController {
         return ResponseEntity.ok(findFreelancer);
     }
 
-    @ApiOperation(value = "프리랜서 활성화", notes = "프리랜서를 활성화")
+    @ApiOperation(value = "프리랜서 활성화", notes = "회원 ID로 프리랜서를 활성화")
     @RoleFreelancer
-    @GetMapping("/activate")
-    public void activateFreelancer() {
-        freelancerService.activateFreelancer();
+    @GetMapping("/{id}/activate")
+    public void activateFreelancer(@PathVariable Long id) {
+        freelancerService.activateFreelancer(id);
     }
 
-    @ApiOperation(value = "프리랜서 비활성화", notes = "프리랜서를 비활성화")
+    @ApiOperation(value = "프리랜서 비활성화", notes = "회원 ID로 프리랜서를 비활성화")
     @RoleFreelancer
-    @GetMapping("/deactivate")
-    public void deactivateFreelancer() {
-        freelancerService.deactivateFreelancer();
+    @GetMapping("/{id}/deactivate")
+    public void deactivateFreelancer(@PathVariable Long id) {
+        freelancerService.deactivateFreelancer(id);
     }
 
-//    @ApiOperation(value = "프리랜서 비활성화", notes = "프리랜서를 비활성화")
-//    @RoleFreelancer
-//    @PutMapping
-//    public void
-// 수정 개발
 }
