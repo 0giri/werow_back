@@ -1,7 +1,6 @@
 package com.werow.web.auth.controller;
 
 import com.werow.web.commons.HttpUtils;
-import com.werow.web.auth.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,6 @@ import java.util.Map;
 @RequestMapping("/login")
 public class FrontLoginController {
 
-    private final MemberService memberService;
     private final HttpUtils httpUtils;
     private final HttpServletRequest request;
 
@@ -33,7 +31,7 @@ public class FrontLoginController {
         String serverHostName = httpUtils.getServerHostName(request);
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("client_id", "e485731066d013c1fc6faaf79bfc6d04");
-        paramsMap.put("redirect_uri", serverHostName + "/oauth/kakao");
+        paramsMap.put("redirect_uri", serverHostName + "/api/login/kakao");
         paramsMap.put("response_type", "code");
         String queryString = httpUtils.mapToQueryString(paramsMap);
 

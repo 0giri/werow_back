@@ -27,7 +27,7 @@ public class SwaggerConfig {
     private ApiInfo swaggerInfo() {
         return new ApiInfoBuilder()
                 .title("Werow API Documentation")
-                .description("Backend Server API Doc")
+                .description("0giri.com/api/...")
                 .license("0giri")
                 .licenseUrl("https://github.com/0giri")
                 .version("1")

@@ -1,11 +1,14 @@
-package com.werow.web.auth.jwt;
+package com.werow.web.commons;
 
 import com.werow.web.account.entity.User;
+import com.werow.web.account.entity.enums.Role;
+import com.werow.web.auth.dto.TokenInfo;
+import com.werow.web.exception.NotBearerTypeException;
+import com.werow.web.exception.NotHaveJwtException;
+import com.werow.web.exception.NotValidatedJwtException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecurityException;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,11 +27,12 @@ import java.util.Date;
 public class JwtUtils implements InitializingBean {
 
     private final String SECRET_KEY;
-    @Getter
     private final long ACCESS_TOKEN_EXPIRATION_MS;
-    @Getter
     private final long REFRESH_TOKEN_EXPIRATION_MS;
     private Key key;
+
+    public final static String ACCESS = "Access";
+    public final static String REFRESH = "Refresh";
 
     /**
      * yml에 설정한 값들을 가져와 변수 초기화
@@ -39,7 +43,7 @@ public class JwtUtils implements InitializingBean {
             @Value("${jwt.refresh-expiration-sec}") long refreshTokenExpirationSec) {
         this.SECRET_KEY = secretKey;
         this.ACCESS_TOKEN_EXPIRATION_MS = accessTokenExpirationSec * 1000;
-        this.REFRESH_TOKEN_EXPIRATION_MS = accessTokenExpirationSec * 1000;
+        this.REFRESH_TOKEN_EXPIRATION_MS = refreshTokenExpirationSec * 1000;
     }
 
     /**
@@ -57,7 +61,10 @@ public class JwtUtils implements InitializingBean {
                 .setIssuer("0giri")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_MS))
-                .setSubject(String.valueOf(user.getId()))
+                .setSubject(user.getId().toString())
+                .claim("tokenType", ACCESS)
+                .claim("email", user.getEmail())
+                .claim("role", user.getRole())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
@@ -68,45 +75,48 @@ public class JwtUtils implements InitializingBean {
                 .setIssuer("0giri")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_MS))
-                .setSubject(String.valueOf(user.getId()))
+                .setSubject(user.getId().toString())
+                .claim("tokenType", REFRESH)
                 .claim("email", user.getEmail())
+                .claim("role", user.getRole().name())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
 
-
-    public boolean validateToken(HttpServletRequest request) {
-        String token = resolveToken(request);
-        return isValidatedToken(token);
+    public TokenInfo getTokenInfo(HttpServletRequest request) {
+        String accessToken = getAccessToken(request);
+        return parseToken(accessToken);
     }
 
-    /**
-     * request의 Authorization 헤더에서 토큰만 추출
-     */
-    private String resolveToken(HttpServletRequest request) {
+    public String getAccessToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+        if (!StringUtils.hasText(bearerToken)) {
+            throw new NotHaveJwtException("JWT 토큰이 없습니다.");
         }
-        return null;
+        if (!bearerToken.startsWith("Bearer ")) {
+            throw new NotBearerTypeException("토큰이 Bearer 타입이 아닙니다.");
+        }
+        return bearerToken.substring(7);
     }
 
-    /**
-     * 토큰 유효성 검증
-     */
-    private boolean isValidatedToken(String token) {
+    private TokenInfo parseToken(String accessToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
+            Claims body = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(accessToken)
+                    .getBody();
+
+            String tokenType = body.get("tokenType", String.class);
+            Long id = Long.parseLong(body.getSubject());
+            String email = body.get("email", String.class);
+            Role role = Role.valueOf(body.get("role", String.class));
+
+            return new TokenInfo(tokenType, id, email, role);
+        } catch (MalformedJwtException e) {
+            throw new NotValidatedJwtException("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
+            throw new NotValidatedJwtException("만료된 JWT 토큰입니다.");
         }
-        return false;
     }
 }

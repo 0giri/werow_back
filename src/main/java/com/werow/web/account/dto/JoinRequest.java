@@ -1,13 +1,13 @@
-package com.werow.web.auth.dto;
+package com.werow.web.account.dto;
 
 import com.werow.web.account.entity.enums.AuthProvider;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
-@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class JoinRequest {
     private String email;
     private String nickname;

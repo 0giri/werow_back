@@ -1,4 +1,4 @@
-package com.werow.web.auth;
+package com.werow.web.auth.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface TokenRequired {
+public @interface RoleAdmin {
 }

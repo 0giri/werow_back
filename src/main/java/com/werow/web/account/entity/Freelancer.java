@@ -1,28 +1,60 @@
 package com.werow.web.account.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.werow.web.account.dto.FreelancerDto;
+import com.werow.web.account.dto.RegRequest;
 import com.werow.web.account.entity.enums.BusinessKind;
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-public class Freelancer extends BaseInfo {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Freelancer {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String phone;
     @Lob
     private String introduce;
     private String career;
-    private int workCount;
     @Enumerated(EnumType.STRING)
     private BusinessKind kind;
-
+    private int workCount;
     private boolean activated;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_freelancer_to_user"))
+    @JsonIgnore
+    @Setter
+    @OneToOne(mappedBy = "freelancer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
+
+    public Freelancer(RegRequest regRequest) {
+        this.phone = regRequest.getPhone();
+        this.introduce = regRequest.getIntroduce();
+        this.career = regRequest.getCareer();
+        this.workCount = 0;
+        this.kind = regRequest.getKind();
+        this.activated = true;
+    }
+
+    public FreelancerDto freelancerToDto() {
+        return new FreelancerDto(this.getUser(), this);
+    }
+
+    public void plusWorkCount() {
+        this.workCount++;
+    }
+
+    public void activate() {
+        this.activated = true;
+    }
+
+    public void deactivate() {
+        this.activated = false;
+    }
 }

@@ -1,32 +1,12 @@
 package com.werow.web.commons;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Component
 public class HttpUtils {
-
-    /**
-     * 외부 Host와의 Connection 생성
-     */
-    public HttpURLConnection createConnection(String path) throws IOException {
-        URL url = new URL(path);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setDoInput(true);
-        con.setDoOutput(true);
-        return con;
-    }
 
     /**
      * 파라미터가 담긴 Map을 쿼리스트링 형식의 String으로 변환
@@ -38,30 +18,6 @@ public class HttpUtils {
         }
         sb.deleteCharAt(sb.lastIndexOf("&"));
         return sb.toString();
-    }
-
-    /**
-     * JSON 형식의 응답 결과를 파싱해 JsonNode로 변환
-     */
-    public JsonNode responseToJsonNode(HttpURLConnection con) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readTree(con.getInputStream());
-    }
-
-    public void setRequestBody(HttpURLConnection con, Map<String, Object> paramsMap) throws IOException {
-        String queryString = mapToQueryString(paramsMap);
-
-        OutputStream os = con.getOutputStream();
-        os.write(queryString.getBytes(StandardCharsets.UTF_8));
-        os.flush();
-        os.close();
-    }
-
-    public JsonNode executeRequest(HttpURLConnection con) throws IOException {
-        con.connect();
-        JsonNode result = responseToJsonNode(con);
-        con.disconnect();
-        return result;
     }
 
     public String getClientIP(HttpServletRequest request) {
@@ -89,4 +45,39 @@ public class HttpUtils {
         String requestURI = request.getRequestURI();
         return requestURL.substring(0, requestURL.indexOf(requestURI));
     }
+
+//    /**
+//     * 외부 Host와의 Connection 생성
+//     */
+//    public HttpURLConnection createConnection(String path) throws IOException {
+//        URL url = new URL(path);
+//        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+//        con.setDoInput(true);
+//        con.setDoOutput(true);
+//        return con;
+//    }
+//
+//    public void setRequestBody(HttpURLConnection con, Map<String, Object> paramsMap) throws IOException {
+//        String queryString = mapToQueryString(paramsMap);
+//
+//        OutputStream os = con.getOutputStream();
+//        os.write(queryString.getBytes(StandardCharsets.UTF_8));
+//        os.flush();
+//        os.close();
+//    }
+//
+//    public JsonNode executeRequest(HttpURLConnection con) throws IOException {
+//        con.connect();
+//        JsonNode result = responseToJsonNode(con);
+//        con.disconnect();
+//        return result;
+//    }
+//
+//    /**
+//     * JSON 형식의 응답 결과를 파싱해 JsonNode로 변환
+//     */
+//    public JsonNode responseToJsonNode(HttpURLConnection con) throws IOException {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        return objectMapper.readTree(con.getInputStream());
+//    }
 }
