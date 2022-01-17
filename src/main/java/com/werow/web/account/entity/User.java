@@ -41,7 +41,7 @@ public class User extends DateInfo {
     @Column(nullable = false)
     private Boolean emailVerified = false;
 
-    @Column(length = 500)
+    @Column(length = 1000)
     private String refreshToken;
 
     @Column(nullable = false)
