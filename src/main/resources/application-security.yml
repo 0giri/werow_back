@@ -1,0 +1,12 @@
+oauth2:
+  kakao:
+    grant-type: authorization_code
+    client-id: e485731066d013c1fc6faaf79bfc6d04
+    redirect-url: http://localhost:8080/api/login/kakao
+    base-url: https://kauth.kakao.com/oauth/token
+    user-info-url: https://kapi.kakao.com/v2/user/me
+
+jwt:
+  secret-key: 7JWI7JiB6ri47JWI7JiB6ri47JWI7JiB6ri47JWI7JiB6ri47JWI7JiB6ri47JWI7JiB6ri47JWI7JiB6ri47JWI7JiB6ri47JWI7JiB6ri47JWI7JiB6ri4Cg==
+  access-expiration-sec: 1800
+  refresh-expiration-sec: 25184000
