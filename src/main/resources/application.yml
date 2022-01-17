@@ -22,3 +22,7 @@ spring:
 logging:
   level:
     com.werow: ${VIEW_DEBUG:debug}
+
+server:
+  servlet:
+    context-path: /api

@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Api(tags = "Freelancer")
 @RestController
-@RequestMapping("/api/freelancers")
+@RequestMapping("/freelancers")
 @CrossOrigin(origins = "http://localhost:3000")
 public class FreelancerController {
 
