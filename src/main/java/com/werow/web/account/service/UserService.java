@@ -1,5 +1,6 @@
 package com.werow.web.account.service;
 
+import com.werow.web.account.dto.ChangeUserDto;
 import com.werow.web.account.dto.JoinRequest;
 import com.werow.web.account.dto.PasswordChangeDto;
 import com.werow.web.account.dto.UserDto;
@@ -72,15 +73,9 @@ public class UserService {
         return findUser.getId();
     }
 
-    public Long changePhoto(Long id, String photo) {
+    public Long changeUser(Long id, ChangeUserDto changeUserDto) {
         User findUser = getUserById(id);
-        findUser.changePhoto(photo);
-        return findUser.getId();
-    }
-
-    public Long changeNickname(Long id, String nickname) {
-        User findUser = getUserById(id);
-        findUser.changeNickname(nickname);
+        findUser.changeUserInfo(changeUserDto);
         return findUser.getId();
     }
 

@@ -1,5 +1,6 @@
 package com.werow.web.account.entity;
 
+import com.werow.web.account.dto.ChangeUserDto;
 import com.werow.web.account.dto.JoinRequest;
 import com.werow.web.account.dto.UserDto;
 import com.werow.web.account.entity.enums.AuthProvider;
@@ -105,8 +106,9 @@ public class User extends DateInfo {
         updateModifiedDate();
     }
 
-    public void changePhoto(String photo) {
-        this.photo = photo;
+    public void changeUserInfo(ChangeUserDto changeUserDto) {
+        this.nickname = changeUserDto.getNickname();
+        this.photo = changeUserDto.getPhoto();
         updateModifiedDate();
     }
 
