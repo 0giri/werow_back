@@ -32,10 +32,11 @@ public class UserService {
     public LoginResponse join(JoinRequest joinRequest) {
         validateDuplicateUser(joinRequest);
         User user = new User(joinRequest);
+        userRepository.save(user);
+
         String accessToken = jwtUtils.createAccessToken(user);
         String refreshToken = jwtUtils.createRefreshToken(user);
         user.updateRefreshToken(refreshToken);
-        userRepository.save(user);
 
         return new LoginResponse(user.getId(), accessToken, refreshToken);
     }
