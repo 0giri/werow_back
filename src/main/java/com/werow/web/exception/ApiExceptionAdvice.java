@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,9 +28,17 @@ public class ApiExceptionAdvice {
                         "데이터 형식에 application/json을 사용하세요",
                         request.getRequestURI()));
     }
+    @ExceptionHandler
+    public ResponseEntity<ExceptionDto> sqlIntegrityConstraintViolationExceptionHandler(SQLIntegrityConstraintViolationException e) {
+        loggingError(e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ExceptionDto(HttpStatus.BAD_REQUEST.value(),
+                        "",
+                        request.getRequestURI()));
+    }
 
     @ExceptionHandler
-    public ResponseEntity<ExceptionDto> notHaveJwtExceptionHandler(CustomException e) {
+    public ResponseEntity<ExceptionDto> customExceptionHandler(CustomException e) {
         loggingError(e);
         return ResponseEntity.status(e.getStatus())
                 .body(new ExceptionDto(e.getStatus(),

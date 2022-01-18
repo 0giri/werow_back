@@ -63,6 +63,13 @@ public class UserController {
         return ResponseEntity.ok(findUser.userToDto());
     }
 
+    @ApiOperation(value = "회원 삭제", notes = "ID로 회원 조회하여 삭제")
+    @RoleUser
+    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void deleteUser(@PathVariable Long id, @RequestBody LoginRequest loginRequest) {
+        userService.deleteUser(id, loginRequest);
+    }
+
     @ApiOperation(value = "닉네임 변경", notes = "ID로 회원 조회하여 닉네임 변경")
     @RoleUser
     @PatchMapping(value = "/{id}/nickname", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -84,10 +91,4 @@ public class UserController {
         return userService.changePassword(id, passwordDto);
     }
 
-    @ApiOperation(value = "회원 삭제", notes = "ID로 회원 조회하여 삭제")
-    @RoleUser
-    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void deleteUser(@PathVariable Long id, @RequestBody LoginRequest loginRequest) {
-        userService.deleteUser(id, loginRequest);
-    }
 }

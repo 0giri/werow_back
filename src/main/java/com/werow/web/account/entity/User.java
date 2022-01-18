@@ -1,9 +1,9 @@
 package com.werow.web.account.entity;
 
+import com.werow.web.account.dto.JoinRequest;
+import com.werow.web.account.dto.UserDto;
 import com.werow.web.account.entity.enums.AuthProvider;
 import com.werow.web.account.entity.enums.Role;
-import com.werow.web.account.dto.UserDto;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
@@ -56,13 +56,12 @@ public class User extends DateInfo {
     @JoinColumn(name = "freelancer_id", foreignKey = @ForeignKey(name = "fk_user_to_freelancer"))
     private Freelancer freelancer;
 
-    @Builder
-    public User(String email, String nickname, String password, String photo, AuthProvider provider) {
-        this.email = email;
-        this.nickname = nickname;
-        this.password = password;
-        this.photo = photo;
-        this.provider = provider;
+    public User(JoinRequest joinRequest) {
+        this.email = joinRequest.getEmail();
+        this.nickname = joinRequest.getNickname();
+        this.password = BCrypt.hashpw(joinRequest.getPassword(), BCrypt.gensalt());
+        this.photo = joinRequest.getPhoto();
+        this.provider = joinRequest.getProvider();
         initDateInfo();
     }
 

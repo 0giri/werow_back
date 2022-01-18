@@ -6,6 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.annotation.PostConstruct;
+import java.util.TimeZone;
+
 @ApiIgnore
 @Controller
 @SpringBootApplication
@@ -20,4 +23,8 @@ public class WebApplication {
         SpringApplication.run(WebApplication.class, args);
     }
 
+    @PostConstruct
+    public void started(){
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+    }
 }

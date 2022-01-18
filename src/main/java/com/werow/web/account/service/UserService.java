@@ -5,12 +5,11 @@ import com.werow.web.account.dto.PasswordChangeDto;
 import com.werow.web.account.dto.UserDto;
 import com.werow.web.account.entity.User;
 import com.werow.web.account.repository.UserRepository;
-import com.werow.web.auth.dto.*;
+import com.werow.web.auth.dto.LoginRequest;
+import com.werow.web.auth.dto.LoginResponse;
+import com.werow.web.auth.dto.TokenInfo;
 import com.werow.web.commons.JwtUtils;
-import com.werow.web.exception.NotEnoughAuthorityException;
-import com.werow.web.exception.NotExistResourceException;
-import com.werow.web.exception.NotJoinedUserException;
-import com.werow.web.exception.NotMatchPassword;
+import com.werow.web.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -18,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,15 +30,8 @@ public class UserService {
     private final HttpServletRequest request;
 
     public LoginResponse join(JoinRequest joinRequest) {
-        String encodedPassword = BCrypt.hashpw(joinRequest.getPassword(), BCrypt.gensalt());
-        User user = User.builder()
-                .email(joinRequest.getEmail())
-                .nickname(joinRequest.getNickname())
-                .password(encodedPassword)
-                .photo(joinRequest.getPhoto())
-                .provider(joinRequest.getProvider())
-                .build();
-
+        validateDuplicateUser(joinRequest);
+        User user = new User(joinRequest);
         userRepository.save(user);
 
         String accessToken = jwtUtils.createAccessToken(user);
@@ -46,6 +39,18 @@ public class UserService {
         user.updateRefreshToken(refreshToken);
 
         return new LoginResponse(user.getId(), accessToken, refreshToken);
+    }
+
+    private void validateDuplicateUser(JoinRequest joinRequest) {
+        Optional<User> findUserByEmailOrNickname =
+                userRepository.findByEmailOrNickname(joinRequest.getEmail(), joinRequest.getNickname());
+        if (findUserByEmailOrNickname.isPresent()) {
+            User findUser = findUserByEmailOrNickname.get();
+            if (joinRequest.getEmail().equals(findUser.getEmail())) {
+                throw new DuplicatedUniqueException("이미 존재하는 이메일입니다.");
+            }
+            throw new DuplicatedUniqueException("이미 존재하는 닉네임입니다.");
+        }
     }
 
     public void deleteUser(Long id, LoginRequest loginRequest) {
@@ -67,16 +72,6 @@ public class UserService {
         return findUser.getId();
     }
 
-
-    @Transactional(readOnly = true)
-    public List<UserDto> userListToDtoList() {
-        List<User> allUsers = userRepository.findAll();
-        return allUsers
-                .stream()
-                .map(User::userToDto)
-                .collect(Collectors.toList());
-    }
-
     public Long changePhoto(Long id, String photo) {
         User findUser = getUserById(id);
         findUser.changePhoto(photo);
@@ -87,6 +82,15 @@ public class UserService {
         User findUser = getUserById(id);
         findUser.changeNickname(nickname);
         return findUser.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDto> userListToDtoList() {
+        List<User> allUsers = userRepository.findAll();
+        return allUsers
+                .stream()
+                .map(User::userToDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
