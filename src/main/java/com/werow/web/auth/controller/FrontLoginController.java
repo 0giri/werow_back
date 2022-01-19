@@ -15,7 +15,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/login")
+@RequestMapping("/front")
 public class FrontLoginController {
 
     private final HttpUtils httpUtils;

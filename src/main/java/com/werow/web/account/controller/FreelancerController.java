@@ -59,14 +59,14 @@ public class FreelancerController {
 
     @ApiOperation(value = "프리랜서 활성화", notes = "회원 ID로 프리랜서를 활성화")
     @RoleFreelancer
-    @GetMapping("/{id}/activate")
+    @PatchMapping("/{id}/activate")
     public void activateFreelancer(@PathVariable Long id) {
         freelancerService.activateFreelancer(id);
     }
 
     @ApiOperation(value = "프리랜서 비활성화", notes = "회원 ID로 프리랜서를 비활성화")
     @RoleFreelancer
-    @GetMapping("/{id}/deactivate")
+    @PatchMapping("/{id}/deactivate")
     public void deactivateFreelancer(@PathVariable Long id) {
         freelancerService.deactivateFreelancer(id);
     }

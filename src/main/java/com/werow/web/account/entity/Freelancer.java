@@ -4,9 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.werow.web.account.dto.FreelancerDto;
 import com.werow.web.account.dto.RegRequest;
 import com.werow.web.account.entity.enums.BusinessKind;
+import com.werow.web.work.entity.Work;
+import com.werow.web.work.entity.WorkRequest;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,27 +23,33 @@ public class Freelancer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false, length = 20)
     private String phone;
     @Lob
     private String introduce;
     private String career;
+    @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private BusinessKind kind;
-    private int workCount;
-    private boolean activated;
-
-    @JsonIgnore
-    @Setter
+    @Column(columnDefinition = "int default 0")
+    private Integer workCount;
+    @Column(columnDefinition = "bit(1) default 1")
+    private Boolean pub;
+    @JsonIgnore @Setter
     @OneToOne(mappedBy = "freelancer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
+
+    @OneToMany(mappedBy = "freelancer")
+    private List<WorkRequest> workRequests = new ArrayList<>();
+
+    @OneToMany(mappedBy = "freelancer")
+    private List<Work> works = new ArrayList<>();
 
     public Freelancer(RegRequest regRequest) {
         this.phone = regRequest.getPhone();
         this.introduce = regRequest.getIntroduce();
         this.career = regRequest.getCareer();
-        this.workCount = 0;
         this.kind = regRequest.getKind();
-        this.activated = true;
     }
 
     public FreelancerDto freelancerToDto() {
@@ -51,10 +61,10 @@ public class Freelancer {
     }
 
     public void activate() {
-        this.activated = true;
+        this.pub = true;
     }
 
     public void deactivate() {
-        this.activated = false;
+        this.pub = false;
     }
 }

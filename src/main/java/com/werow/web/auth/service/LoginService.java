@@ -24,6 +24,7 @@ public class LoginService {
 
     @Transactional
     public LoginResponse oAuth2Login(OAuth2UserInfo oAuth2UserInfo) {
+        System.out.println("oAuth2UserInfo = " + oAuth2UserInfo);
         User findUser = userRepository.findByEmailAndProvider(oAuth2UserInfo.getEmail(), oAuth2UserInfo.getProvider()).orElseThrow(
                 () -> new NotJoinedUserException("미가입 유저입니다."));
 

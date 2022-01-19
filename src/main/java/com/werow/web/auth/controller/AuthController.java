@@ -1,9 +1,6 @@
 package com.werow.web.auth.controller;
 
-import com.werow.web.auth.dto.LoginRequest;
-import com.werow.web.auth.dto.LoginResponse;
-import com.werow.web.auth.dto.OAuth2UserInfo;
-import com.werow.web.auth.dto.RefreshResponse;
+import com.werow.web.auth.dto.*;
 import com.werow.web.auth.service.KakaoService;
 import com.werow.web.auth.service.LoginService;
 import io.swagger.annotations.Api;
@@ -25,16 +22,15 @@ public class AuthController {
     private final LoginService loginService;
 
     @ApiOperation(value = "카카오 회원 정보 조회", notes = "카카오에 저장된 회원 정보 조회 (회원 가입 폼으로 이동하기 전 호출)")
-    @PostMapping(value = "/auth/kakao", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OAuth2UserInfo> getKakaoUserInfo(@RequestBody String code) {
+    @GetMapping(value = "/auth/kakao")
+    public ResponseEntity<OAuth2UserInfo> getKakaoUserInfo(String code) {
         OAuth2UserInfo kakaoUserInfo = KakaoService.getUserInfo(code);
         return ResponseEntity.ok(kakaoUserInfo);
     }
 
     @ApiOperation(value = "카카오 로그인", notes = "카카오 회원 정보와 일치하는 유저가 있다면 Access, Refresh 토큰 생성하여 반환")
-    @GetMapping(value = "/login/kakao", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<LoginResponse> kakaoLogin(@RequestBody String code) {
-        System.out.println("code = " + code);
+    @GetMapping(value = "/login/kakao")
+    public ResponseEntity<LoginResponse> kakaoLogin(String code) {
         OAuth2UserInfo kakaoUserInfo = KakaoService.getUserInfo(code);
         LoginResponse loginResponse = loginService.oAuth2Login(kakaoUserInfo);
         return ResponseEntity.ok(loginResponse);

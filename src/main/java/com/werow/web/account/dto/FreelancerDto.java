@@ -17,9 +17,9 @@ public class FreelancerDto {
     private String phone;
     private String introduce;
     private String career;
-    private int workCount;
     private BusinessKind kind;
-    private boolean activated;
+    private Integer workCount;
+    private Boolean pub;
 
     public FreelancerDto(User user, Freelancer freelancer) {
         this.user = new UserDto(user);
@@ -28,6 +28,6 @@ public class FreelancerDto {
         this.career = freelancer.getCareer();
         this.workCount = freelancer.getWorkCount();
         this.kind = freelancer.getKind();
-        this.activated = freelancer.isActivated();
+        this.pub = freelancer.getPub();
     }
 }

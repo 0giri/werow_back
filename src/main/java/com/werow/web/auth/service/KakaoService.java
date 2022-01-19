@@ -46,7 +46,6 @@ public class KakaoService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
         MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
         params.add("grant_type", grantType);
         params.add("client_id", clientId);
@@ -56,7 +55,6 @@ public class KakaoService {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(params, headers);
         ResponseEntity<JsonNode> responseEntity = restTemplate.postForEntity(URI.create(baseURL), requestEntity, JsonNode.class);
         JsonNode response = responseEntity.getBody();
-
         return response.get("access_token").asText();
     }
 
@@ -64,6 +62,7 @@ public class KakaoService {
      * Access Token으로 유저 정보 요청
      */
     public OAuth2UserInfo getUserInfoByToken(String accessToken) {
+        System.out.println("accessToken = " + accessToken);
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
