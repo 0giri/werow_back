@@ -25,5 +25,4 @@
 * Docker
 * Jenkins
 * Nginx
-* SSL (https)
 ---
