@@ -40,21 +40,32 @@ public class FreelancerService {
     }
 
     /**
-     * 유저 ID로 프리랜서 조회
+     * 유저 ID로 프리랜서 조회, DTO 반환
      */
-    public FreelancerDto findFreelancerByUserId(Long id) {
-        User findUser = userRepository.findById(id).orElseThrow(
-                () -> new NotExistResourceException("해당 ID를 가진 유저가 존재하지 않습니다."));
-        Freelancer freelancer = findUser.getFreelancer();
+    public FreelancerDto getFreelancerDtoByUserId(Long id) {
+        Freelancer freelancer = findFreelancerByUserId(id);
         return freelancer.freelancerToDto();
     }
 
     /**
      * 토큰으로 프리랜서 조회
      */
-    public FreelancerDto findFreelancerByToken() {
+    public FreelancerDto getFreelancerDtoByToken() {
         TokenInfo tokenInfo = jwtUtils.getTokenInfo(request);
-        return findFreelancerByUserId(tokenInfo.getId());
+        return getFreelancerDtoByUserId(tokenInfo.getId());
+    }
+
+    /**
+     * 유저 ID로 프리랜서 엔티티 조회
+     */
+    public Freelancer findFreelancerByUserId(Long id) {
+        User findUser = userRepository.findById(id).orElseThrow(
+                () -> new NotExistResourceException("해당 ID를 가진 유저가 존재하지 않습니다."));
+        Freelancer freelancer = findUser.getFreelancer();
+        if (freelancer == null) {
+            throw new NotExistResourceException("해당 유저는 프리랜서로 등록되지 않았습니다.");
+        }
+        return freelancer;
     }
 
     /**

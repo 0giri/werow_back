@@ -4,17 +4,20 @@ import com.werow.web.account.dto.JoinRequest;
 import com.werow.web.account.dto.UserDto;
 import com.werow.web.account.entity.enums.AuthProvider;
 import com.werow.web.account.entity.enums.Role;
+import com.werow.web.commons.DateInfo;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class User extends DateInfo {
 
@@ -144,21 +147,6 @@ public class User extends DateInfo {
     public void deactivate() {
         this.activated = false;
         updateModifiedDate();
-    }
-
-    /**
-     * 유저 등록시 날짜 기본 설정
-     */
-    public void initDateInfo() {
-        this.createdAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-        this.lastModifiedAt = createdAt;
-    }
-
-    /**
-     * 유저 수정시 수정일 업데이트
-     */
-    public void updateModifiedDate() {
-        this.lastModifiedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 
 }

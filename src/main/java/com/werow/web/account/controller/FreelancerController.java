@@ -48,7 +48,7 @@ public class FreelancerController {
     @ApiOperation(value = "JWT 프리랜서 조회", notes = "JWT로 프리랜서 정보 조회")
     @GetMapping(value = "/token",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FreelancerDto> getFreelancerByToken() {
-        FreelancerDto findFreelancer = freelancerService.findFreelancerByToken();
+        FreelancerDto findFreelancer = freelancerService.getFreelancerDtoByToken();
         return ResponseEntity.ok(findFreelancer);
     }
 
@@ -56,7 +56,7 @@ public class FreelancerController {
     @ApiOperation(value = "프리랜서 조회", notes = "회원 ID로 프리랜서 정보 조회")
     @GetMapping("/{id}")
     public ResponseEntity<FreelancerDto> getFreelancerByUserId(@PathVariable Long id) {
-        FreelancerDto findFreelancer = freelancerService.findFreelancerByUserId(id);
+        FreelancerDto findFreelancer = freelancerService.getFreelancerDtoByUserId(id);
         return ResponseEntity.ok(findFreelancer);
     }
 

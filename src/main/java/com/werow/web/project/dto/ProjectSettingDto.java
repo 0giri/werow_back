@@ -1,13 +1,14 @@
-package com.werow.web.account.dto;
+package com.werow.web.project.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChangeUserDto {
-    private String nickname;
-    private String photo;
+public class ProjectSettingDto {
+    private LocalDate startAt;
 }

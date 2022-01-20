@@ -1,6 +1,6 @@
 package com.werow.web.account.service;
 
-import com.werow.web.account.dto.ChangeUserDto;
+import com.werow.web.account.dto.ChangeUserRequest;
 import com.werow.web.account.dto.JoinRequest;
 import com.werow.web.account.dto.PasswordChangeDto;
 import com.werow.web.account.dto.UserDto;
@@ -57,7 +57,7 @@ public class UserService {
     /**
      * ID로 유저 조회
      */
-    private User getUserById(Long id) {
+    public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new NotExistResourceException("해당 ID를 가진 유저가 존재하지 않습니다."));
     }
@@ -75,23 +75,23 @@ public class UserService {
     /**
      * 유저 닉네임 변경
      */
-    public void changeNickname(Long id, ChangeUserDto changeUserDto) {
-        Optional<User> findUserByNickname = userRepository.findByNickname(changeUserDto.getNickname());
+    public void changeNickname(Long id, ChangeUserRequest changeUserRequest) {
+        Optional<User> findUserByNickname = userRepository.findByNickname(changeUserRequest.getNickname());
         if (findUserByNickname.isPresent()) {
             throw new DuplicatedUniqueException("이미 존재하는 닉네임입니다.");
         }
         User findUser = getUserById(id);
         checkTokenUser(findUser);
-        findUser.changeNickname(changeUserDto.getNickname());
+        findUser.changeNickname(changeUserRequest.getNickname());
     }
 
     /**
      * 유저 프로필사진 변경
      */
-    public void changePhoto(Long id, ChangeUserDto changeUserDto) {
+    public void changePhoto(Long id, ChangeUserRequest changeUserRequest) {
         User findUser = getUserById(id);
         checkTokenUser(findUser);
-        findUser.changePhoto(changeUserDto.getPhoto());
+        findUser.changePhoto(changeUserRequest.getPhoto());
     }
 
     /**

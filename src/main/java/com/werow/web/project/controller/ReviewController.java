@@ -1,4 +1,4 @@
-package com.werow.web.work.controller;
+package com.werow.web.project.controller;
 
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;

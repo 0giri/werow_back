@@ -1,6 +1,6 @@
 package com.werow.web.account.controller;
 
-import com.werow.web.account.dto.ChangeUserDto;
+import com.werow.web.account.dto.ChangeUserRequest;
 import com.werow.web.account.dto.JoinRequest;
 import com.werow.web.account.dto.PasswordChangeDto;
 import com.werow.web.account.dto.UserDto;
@@ -73,15 +73,15 @@ public class UserController {
     @RoleUser
     @ApiOperation(value = "유저 닉네임 변경 (ID)", notes = "ID로 유저 조회하여 닉네임 변경")
     @PatchMapping(value = "/{id}/nickname", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void changeUserNickname(@PathVariable Long id, @RequestBody ChangeUserDto changeUserDto) {
-        userService.changeNickname(id, changeUserDto);
+    public void changeUserNickname(@PathVariable Long id, @RequestBody ChangeUserRequest changeUserRequest) {
+        userService.changeNickname(id, changeUserRequest);
     }
 
     @RoleUser
     @ApiOperation(value = "유저 프로필사진 변경 (ID)", notes = "ID로 유저 조회하여 프로필사진 변경")
     @PatchMapping(value = "/{id}/photo", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void changeUserPhoto(@PathVariable Long id, @RequestBody ChangeUserDto changeUserDto) {
-        userService.changePhoto(id, changeUserDto);
+    public void changeUserPhoto(@PathVariable Long id, @RequestBody ChangeUserRequest changeUserRequest) {
+        userService.changePhoto(id, changeUserRequest);
     }
 
     @RoleUser

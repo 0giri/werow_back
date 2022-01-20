@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.werow.web.account.dto.FreelancerDto;
 import com.werow.web.account.dto.RegRequest;
 import com.werow.web.account.entity.enums.BusinessKind;
-import com.werow.web.work.entity.Work;
-import com.werow.web.work.entity.WorkRequest;
+import com.werow.web.commons.DateInfo;
+import com.werow.web.project.entity.Review;
 import lombok.*;
 
 import javax.persistence.*;
@@ -40,9 +40,7 @@ public class Freelancer extends DateInfo {
     @OneToOne(mappedBy = "freelancer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
     @OneToMany(mappedBy = "freelancer")
-    private List<WorkRequest> workRequests = new ArrayList<>();
-    @OneToMany(mappedBy = "freelancer")
-    private List<Work> works = new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
 
     /**
      * 프리랜서 등록 폼에서 넘어온 필수 데이터로 프리랜서 엔티티 생성

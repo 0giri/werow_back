@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PasswordChangeDto {
-    @ApiModelProperty(example = "1q2w3e4r!")
-    private String currentPassword;
-    @ApiModelProperty(example = "5t6y7u8i!")
-    private String newPassword;
+public class ChangeUserRequest {
+    @ApiModelProperty(example = "new nickname")
+    private String nickname;
+    @ApiModelProperty(example = "new photo URL")
+    private String photo;
 }
