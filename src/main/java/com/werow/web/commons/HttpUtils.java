@@ -20,6 +20,9 @@ public class HttpUtils {
         return sb.toString();
     }
 
+    /**
+     * 클라이언트의 IP 주소 반환
+     */
     public String getClientIP(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
         if (ip == null) {
@@ -40,44 +43,13 @@ public class HttpUtils {
         return ip;
     }
 
+    /**
+     * 서버 호스트명 반환
+     */
     public String getServerHostName(HttpServletRequest request) {
         StringBuffer requestURL = request.getRequestURL();
         String requestURI = request.getRequestURI();
         return requestURL.substring(0, requestURL.indexOf(requestURI));
     }
 
-//    /**
-//     * 외부 Host와의 Connection 생성
-//     */
-//    public HttpURLConnection createConnection(String path) throws IOException {
-//        URL url = new URL(path);
-//        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//        con.setDoInput(true);
-//        con.setDoOutput(true);
-//        return con;
-//    }
-//
-//    public void setRequestBody(HttpURLConnection con, Map<String, Object> paramsMap) throws IOException {
-//        String queryString = mapToQueryString(paramsMap);
-//
-//        OutputStream os = con.getOutputStream();
-//        os.write(queryString.getBytes(StandardCharsets.UTF_8));
-//        os.flush();
-//        os.close();
-//    }
-//
-//    public JsonNode executeRequest(HttpURLConnection con) throws IOException {
-//        con.connect();
-//        JsonNode result = responseToJsonNode(con);
-//        con.disconnect();
-//        return result;
-//    }
-//
-//    /**
-//     * JSON 형식의 응답 결과를 파싱해 JsonNode로 변환
-//     */
-//    public JsonNode responseToJsonNode(HttpURLConnection con) throws IOException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        return objectMapper.readTree(con.getInputStream());
-//    }
 }

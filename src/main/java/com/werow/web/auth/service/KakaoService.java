@@ -62,7 +62,6 @@ public class KakaoService {
      * Access Token으로 유저 정보 요청
      */
     public OAuth2UserInfo getUserInfoByToken(String accessToken) {
-        System.out.println("accessToken = " + accessToken);
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

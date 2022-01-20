@@ -4,7 +4,7 @@ import com.werow.web.account.entity.User;
 import com.werow.web.account.entity.enums.Role;
 import com.werow.web.auth.dto.TokenInfo;
 import com.werow.web.exception.NotBearerTypeException;
-import com.werow.web.exception.NotHaveJwtException;
+import com.werow.web.exception.NotEnoughAuthorityException;
 import com.werow.web.exception.NotValidatedJwtException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -35,7 +35,7 @@ public class JwtUtils implements InitializingBean {
     public final static String REFRESH = "Refresh";
 
     /**
-     * yml에 설정한 값들을 가져와 변수 초기화
+     * application-security.yml에 설정한 값들을 바인딩해 변수 초기화
      */
     public JwtUtils(
             @Value("${jwt.secret-key}") String secretKey,
@@ -55,6 +55,9 @@ public class JwtUtils implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+    /**
+     * Access 토큰 생성
+     */
     public String createAccessToken(User user) {
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
@@ -69,6 +72,9 @@ public class JwtUtils implements InitializingBean {
                 .compact();
     }
 
+    /**
+     * Refresh 토큰 생성
+     */
     public String createRefreshToken(User user) {
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
@@ -83,15 +89,21 @@ public class JwtUtils implements InitializingBean {
                 .compact();
     }
 
+    /**
+     * 토큰 정보 반환
+     */
     public TokenInfo getTokenInfo(HttpServletRequest request) {
         String accessToken = getAccessToken(request);
         return parseToken(accessToken);
     }
 
+    /**
+     * Request의 Authorization 헤더에서 순수 토큰값만 추출
+     */
     public String getAccessToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (!StringUtils.hasText(bearerToken)) {
-            throw new NotHaveJwtException("JWT 토큰이 없습니다.");
+            throw new NotEnoughAuthorityException("JWT 토큰이 없습니다.");
         }
         if (!bearerToken.startsWith("Bearer ")) {
             throw new NotBearerTypeException("토큰이 Bearer 타입이 아닙니다.");
@@ -99,6 +111,9 @@ public class JwtUtils implements InitializingBean {
         return bearerToken.substring(7);
     }
 
+    /**
+     * 토큰을 검증하고 파싱하여 토큰 정보 DTO로 변환
+     */
     private TokenInfo parseToken(String accessToken) {
         try {
             Claims body = Jwts.parserBuilder()
@@ -119,4 +134,5 @@ public class JwtUtils implements InitializingBean {
             throw new NotValidatedJwtException("만료된 JWT 토큰입니다.");
         }
     }
+
 }

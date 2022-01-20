@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,14 +25,6 @@ public class ApiExceptionAdvice {
         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
                 .body(new ExceptionDto(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
                         "데이터 형식에 application/json을 사용하세요",
-                        request.getRequestURI()));
-    }
-    @ExceptionHandler
-    public ResponseEntity<ExceptionDto> sqlIntegrityConstraintViolationExceptionHandler(SQLIntegrityConstraintViolationException e) {
-        loggingError(e);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ExceptionDto(HttpStatus.BAD_REQUEST.value(),
-                        "",
                         request.getRequestURI()));
     }
 

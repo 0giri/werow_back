@@ -33,30 +33,34 @@ public class UserController {
     private final UserRepository userRepository;
     private final UserService userService;
 
-    @ApiOperation(value = "모든 회원 조회", notes = "모든 회원 정보 조회")
-    @RoleManager
-    @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> userDtoList = userService.userListToDtoList();
-        return ResponseEntity.ok(userDtoList);
-    }
-
-    @ApiOperation(value = "회원 가입", notes = "회원 가입 폼 기반 회원 등록")
+    // ------------------------------------ C ------------------------------------
+    @ApiOperation(value = "유저 등록", notes = "새로운 유저 등록")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResponse> join(@RequestBody JoinRequest joinRequest) {
         LoginResponse loginResponse = userService.join(joinRequest);
         return ResponseEntity.ok(loginResponse);
     }
 
-    @ApiOperation(value = "JWT 회원 조회", notes = "현재 JWT의 소유자 정보 조회")
+
+    // ------------------------------------ R ------------------------------------
+    @RoleManager
+    @ApiOperation(value = "모든 유저 조회", notes = "모든 유저 정보 조회")
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> userDtoList = userService.userListToDtoList();
+        return ResponseEntity.ok(userDtoList);
+    }
+
+    @RoleUser
+    @ApiOperation(value = "유저 조회 (토큰)", notes = "현재 요청에 담긴 토큰의 소유자 정보 조회")
     @GetMapping("/token")
     public ResponseEntity<UserDto> getUserInfoByToken() {
         User findUser = userService.getUserByToken();
         return ResponseEntity.ok(findUser.userToDto());
     }
 
-    @ApiOperation(value = "회원 조회", notes = "ID로 특정 회원 정보 조회")
-    @RoleUser
+    @RoleManager
+    @ApiOperation(value = "유저 조회 (ID)", notes = "ID로 특정 유저 정보 조회")
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
         User findUser = userRepository.findById(id).orElseThrow(
@@ -64,25 +68,50 @@ public class UserController {
         return ResponseEntity.ok(findUser.userToDto());
     }
 
-    @ApiOperation(value = "회원 삭제", notes = "ID로 회원 조회하여 삭제")
+
+    // ------------------------------------ U ------------------------------------
     @RoleUser
+    @ApiOperation(value = "유저 닉네임 변경 (ID)", notes = "ID로 유저 조회하여 닉네임 변경")
+    @PatchMapping(value = "/{id}/nickname", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void changeUserNickname(@PathVariable Long id, @RequestBody ChangeUserDto changeUserDto) {
+        userService.changeNickname(id, changeUserDto);
+    }
+
+    @RoleUser
+    @ApiOperation(value = "유저 프로필사진 변경 (ID)", notes = "ID로 유저 조회하여 프로필사진 변경")
+    @PatchMapping(value = "/{id}/photo", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void changeUserPhoto(@PathVariable Long id, @RequestBody ChangeUserDto changeUserDto) {
+        userService.changePhoto(id, changeUserDto);
+    }
+
+    @RoleUser
+    @ApiOperation(value = "유저 비밀번호 변경 (ID)", notes = "ID로 유저 조회하여 비밀번호 변경")
+    @PatchMapping(value = "/{id}/password",consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void changePassword(@PathVariable Long id, @RequestBody PasswordChangeDto passwordDto) {
+        userService.changePassword(id, passwordDto);
+    }
+
+    @RoleManager
+    @ApiOperation(value = "유저 활성화 (ID)", notes = "유저 계정을 활성화")
+    @PatchMapping("/{id}/activate")
+    public void activateUser(@PathVariable Long id) {
+        userService.activateUser(id);
+    }
+
+    @RoleManager
+    @ApiOperation(value = "유저 비활성화 (ID)", notes = "유저 계정을 휴면 계정으로 전환")
+    @PatchMapping("/{id}/deactivate")
+    public void deactivateUser(@PathVariable Long id) {
+        userService.deactivateUser(id);
+    }
+
+
+    // ------------------------------------ D ------------------------------------
+    @RoleUser
+    @ApiOperation(value = "유저 삭제 (ID)", notes = "ID로 유저 조회하여 삭제")
     @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void deleteUser(@PathVariable Long id, @RequestBody LoginRequest loginRequest) {
         userService.deleteUser(id, loginRequest);
-    }
-
-    @ApiOperation(value = "유저 정보 변경", notes = "닉네임 또는 프로필사진 변경")
-    @RoleUser
-    @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Long changePhoto(@PathVariable Long id, @RequestBody ChangeUserDto changeUserDto) {
-        return userService.changeUser(id, changeUserDto);
-    }
-
-    @ApiOperation(value = "비밀번호 변경", notes = "ID로 회원 조회하여 프로필 사진 변경")
-    @RoleUser
-    @PatchMapping(value = "/{id}/password",consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Long changePassword(@PathVariable Long id, @RequestBody PasswordChangeDto passwordDto) {
-        return userService.changePassword(id, passwordDto);
     }
 
 }

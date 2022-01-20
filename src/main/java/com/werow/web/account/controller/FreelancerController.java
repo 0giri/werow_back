@@ -26,49 +26,57 @@ public class FreelancerController {
 
     private final FreelancerService freelancerService;
 
-    @ApiOperation(value = "모든 프리랜서 조회", notes = "모든 프리랜서 정보 조회")
+    // ------------------------------------ C ------------------------------------
+    @RoleUser
+    @ApiOperation(value = "프리랜서 등록", notes = "프리랜서 등록 폼 기반 프리랜서 등록")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void regFreelancer(@RequestBody RegRequest regRequest) {
+        freelancerService.registerFreelancer(regRequest);
+    }
+
+
+    // ------------------------------------ R ------------------------------------
     @RoleManager
+    @ApiOperation(value = "모든 프리랜서 조회", notes = "모든 프리랜서 정보 조회")
     @GetMapping
     public ResponseEntity<List<FreelancerDto>> getAllFreelancers() {
         List<FreelancerDto> freelancerDtoList = freelancerService.freelancerListToDtoList();
         return ResponseEntity.ok(freelancerDtoList);
     }
 
-    @ApiOperation(value = "프리랜서 등록", notes = "프리랜서 등록 폼 기반 프리랜서 등록")
-    @RoleUser
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void regFreelancer(@RequestBody RegRequest regRequest) {
-        freelancerService.registerFreelancer(regRequest);
-    }
-
-    @ApiOperation(value = "JWT 프리랜서 조회", notes = "JWT로 프리랜서 정보 조회")
     @RoleFreelancer
+    @ApiOperation(value = "JWT 프리랜서 조회", notes = "JWT로 프리랜서 정보 조회")
     @GetMapping(value = "/token",consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FreelancerDto> getFreelancerByToken() {
-        FreelancerDto findFreelancer = freelancerService.findByToken();
+        FreelancerDto findFreelancer = freelancerService.findFreelancerByToken();
         return ResponseEntity.ok(findFreelancer);
     }
 
-    @ApiOperation(value = "프리랜서 조회", notes = "회원 ID로 프리랜서 정보 조회")
     @RoleFreelancer
+    @ApiOperation(value = "프리랜서 조회", notes = "회원 ID로 프리랜서 정보 조회")
     @GetMapping("/{id}")
     public ResponseEntity<FreelancerDto> getFreelancerByUserId(@PathVariable Long id) {
-        FreelancerDto findFreelancer = freelancerService.findByUserId(id);
+        FreelancerDto findFreelancer = freelancerService.findFreelancerByUserId(id);
         return ResponseEntity.ok(findFreelancer);
     }
 
-    @ApiOperation(value = "프리랜서 활성화", notes = "회원 ID로 프리랜서를 활성화")
+
+    // ------------------------------------ U ------------------------------------
     @RoleFreelancer
+    @ApiOperation(value = "프리랜서 활성화", notes = "회원 ID로 프리랜서를 활성화")
     @PatchMapping("/{id}/activate")
     public void activateFreelancer(@PathVariable Long id) {
         freelancerService.activateFreelancer(id);
     }
 
-    @ApiOperation(value = "프리랜서 비활성화", notes = "회원 ID로 프리랜서를 비활성화")
     @RoleFreelancer
+    @ApiOperation(value = "프리랜서 비활성화", notes = "회원 ID로 프리랜서를 비활성화")
     @PatchMapping("/{id}/deactivate")
     public void deactivateFreelancer(@PathVariable Long id) {
         freelancerService.deactivateFreelancer(id);
     }
+
+
+    // ------------------------------------ D ------------------------------------
 
 }

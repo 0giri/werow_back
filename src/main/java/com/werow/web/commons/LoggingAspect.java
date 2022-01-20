@@ -21,12 +21,17 @@ public class LoggingAspect {
 
     private final HttpUtils httpUtils;
     private final HttpServletRequest request;
-    private final JwtUtils jwtUtils;
 
+    /**
+     * 컨트롤러 클래스의 메소드만 포함하는 포인트컷
+     */
     @Pointcut("execution(* com.werow.web..*Controller.*(..))")
     public void controllerPointcut() {
     }
 
+    /**
+     * 컨트롤러의 메소드 실행 전 클라이언트 접속 IP 로깅
+     */
     @Before("controllerPointcut()")
     public void beforeController(JoinPoint jp) {
         String clientIP = httpUtils.getClientIP(request);
@@ -34,6 +39,9 @@ public class LoggingAspect {
         log.info("[IP] {} , [Method] {}", clientIP, method);
     }
 
+    /**
+     * 컨트롤러의 메소드 실행 소요시간 로깅
+     */
     @Around("controllerPointcut()")
     public Object aroundController(ProceedingJoinPoint pjp) throws Throwable {
         String method = pjp.getSignature().toShortString();
@@ -45,15 +53,4 @@ public class LoggingAspect {
         return obj;
     }
 
-//    @Before("controllerPointcut()")
-//    public void beforeController(JoinPoint jp) {
-//        String clientIP = httpUtils.getClientIP(request);
-//        Role role = Role.GUEST;
-//        try {
-//            role = jwtUtils.getTokenInfo(request).getRole();
-//        } catch (Exception ignored) {
-//        }
-//        String method = jp.getSignature().toShortString();
-//        log.info("[IP] {} , [Role] {} , [Method] {}", clientIP, role, method);
-//    }
 }
