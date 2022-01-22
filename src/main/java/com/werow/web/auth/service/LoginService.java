@@ -25,7 +25,7 @@ public class LoginService {
 
     @Transactional
     public OAuth2Response oAuth2Login(OAuth2UserInfo userInfo) {
-        Optional<User> findUser = userRepository.findByEmailAndProvider(userInfo.getEmail(), userInfo.getProvider());
+        Optional<User> findUser = userRepository.findByEmail(userInfo.getEmail());
         if (findUser.isPresent()) {
             LoginResponse loginResponse = loginProcess(findUser.get());
             return new OAuth2Response(loginResponse);
