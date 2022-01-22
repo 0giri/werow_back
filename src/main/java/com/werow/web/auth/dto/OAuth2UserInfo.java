@@ -10,7 +10,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class OAuth2UserInfo extends AuthResponse{
+public class OAuth2UserInfo {
     private String email;
     private String photo;
     private AuthProvider provider;
