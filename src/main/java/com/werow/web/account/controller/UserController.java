@@ -11,6 +11,7 @@ import com.werow.web.auth.annotation.RoleManager;
 import com.werow.web.auth.annotation.RoleUser;
 import com.werow.web.auth.dto.LoginRequest;
 import com.werow.web.auth.dto.LoginResponse;
+import com.werow.web.exception.DuplicatedUniqueException;
 import com.werow.web.exception.NotExistResourceException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,13 +22,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
 @Api(tags = "User")
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserRepository userRepository;
@@ -66,6 +69,24 @@ public class UserController {
         User findUser = userRepository.findById(id).orElseThrow(
                 () -> new NotExistResourceException("해당 ID를 가진 유저가 존재하지 않습니다."));
         return ResponseEntity.ok(findUser.userToDto());
+    }
+
+    @ApiOperation(value = "유저 EMAIL 중복 검사", notes = "해당 EMAIL을 가진 유저가 존재하는지 확인")
+    @GetMapping("/check/email/{email}")
+    public void checkUserByEmail(@PathVariable String email) {
+        Optional<User> findUser = userRepository.findByEmail(email);
+        if (findUser.isPresent()) {
+            throw new DuplicatedUniqueException("중복되는 이메일 주소입니다.");
+        }
+    }
+
+    @ApiOperation(value = "유저 닉네임 중복 검사", notes = "해당 닉네임을 가진 유저가 존재하는지 확인")
+    @GetMapping("/check/nickname/{nickname}")
+    public void checkUserByNickname(@PathVariable String nickname) {
+        Optional<User> findUser = userRepository.findByNickname(nickname);
+        if (findUser.isPresent()) {
+            throw new DuplicatedUniqueException("중복되는 닉네임입니다.");
+        }
     }
 
 

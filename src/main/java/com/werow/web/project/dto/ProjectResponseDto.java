@@ -13,14 +13,20 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ProjectResponseDto {
     private Long projectId;
+    private Long requestId;
+    private Long userId;
+    private Long freelancerId;
+    private String requestInfo;
     private ProjectStatus status;
     private LocalDate startAt;
-    private RequestResponseDto requestResponseDto;
 
     public ProjectResponseDto(Project project) {
         this.projectId = project.getId();
+        this.requestId = project.getProjectRequest().getId();
+        this.userId = project.getUser().getId();
+        this.freelancerId = project.getFreelancer().getId();
+        this.requestInfo = project.getProjectRequest().getRequestInfo();
         this.status = project.getStatus();
         this.startAt = project.getStartAt();
-        this.requestResponseDto = project.getProjectRequest().requestToResponseDto();
     }
 }

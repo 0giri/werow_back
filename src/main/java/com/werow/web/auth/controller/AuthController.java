@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Api(tags = "Auth")
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final KakaoService KakaoService;
@@ -23,13 +24,10 @@ public class AuthController {
 
     @ApiOperation(value = "카카오 로그인", notes = "code로 카카오의 회원 정보를 조회하고, 이 정보와 일치하는 유저가 있다면 로그인 처리, 없다면 카카오 회원 정보 반환")
     @GetMapping(value = "/oauth2/kakao")
-    public ResponseEntity<? extends AuthResponse> kakaoLogin(String code) {
+    public ResponseEntity<OAuth2Response> kakaoLogin(String code) {
         OAuth2UserInfo kakaoUserInfo = KakaoService.getUserInfo(code);
-        AuthResponse authResponse = loginService.oAuth2Login(kakaoUserInfo);
-        if (authResponse instanceof LoginResponse) {
-            return ResponseEntity.ok((LoginResponse) authResponse);
-        }
-        return ResponseEntity.ok(kakaoUserInfo);
+        OAuth2Response oAuth2Response = loginService.oAuth2Login(kakaoUserInfo);
+        return ResponseEntity.ok(oAuth2Response);
     }
 
     @ApiOperation(value = "이메일 로그인", notes = "로그인 폼에 입력한 정보가 유효하다면 로그인 처리")

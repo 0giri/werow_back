@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "Review")
 @RestController
 @RequestMapping("/reviews")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class ReviewController {
 
 

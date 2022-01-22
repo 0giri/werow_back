@@ -20,7 +20,8 @@ import java.util.List;
 @Api(tags = "Freelancer")
 @RestController
 @RequestMapping("/freelancers")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class FreelancerController {
 
     private final FreelancerService freelancerService;

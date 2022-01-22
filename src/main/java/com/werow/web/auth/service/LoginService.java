@@ -24,12 +24,13 @@ public class LoginService {
     private final UserService userService;
 
     @Transactional
-    public AuthResponse oAuth2Login(OAuth2UserInfo userInfo) {
+    public OAuth2Response oAuth2Login(OAuth2UserInfo userInfo) {
         Optional<User> findUser = userRepository.findByEmailAndProvider(userInfo.getEmail(), userInfo.getProvider());
         if (findUser.isPresent()) {
-            return loginProcess(findUser.get());
+            LoginResponse loginResponse = loginProcess(findUser.get());
+            return new OAuth2Response(loginResponse);
         }
-        return userInfo;
+        return new OAuth2Response(userInfo);
     }
 
     @Transactional

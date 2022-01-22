@@ -42,7 +42,7 @@ public class ProjectService {
                 .user(projectRequest.getUser())
                 .freelancer(projectRequest.getFreelancer())
                 .build();
-        return new ProjectResponseDto(project);
+        return project.projectToDto();
     }
 
     public ProjectResponseDto getProjectDto(Long id) {
