@@ -16,6 +16,7 @@ public class FreelancerDto {
     private UserDto user;
     private String phone;
     private String introduce;
+    private String priceInfo;
     private String career;
     private BusinessKind kind;
     private Integer workCount;
@@ -25,6 +26,7 @@ public class FreelancerDto {
         this.user = new UserDto(user);
         this.phone = freelancer.getPhone();
         this.introduce = freelancer.getIntroduce();
+        this.priceInfo = freelancer.getPriceInfo();
         this.career = freelancer.getCareer();
         this.workCount = freelancer.getWorkCount();
         this.kind = freelancer.getKind();

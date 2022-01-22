@@ -11,13 +11,13 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectDto {
+public class ProjectResponseDto {
     private Long projectId;
     private ProjectStatus status;
     private LocalDate startAt;
     private RequestResponseDto requestResponseDto;
 
-    public ProjectDto(Project project) {
+    public ProjectResponseDto(Project project) {
         this.projectId = project.getId();
         this.status = project.getStatus();
         this.startAt = project.getStartAt();

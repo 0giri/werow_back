@@ -3,7 +3,7 @@ package com.werow.web.project.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.werow.web.account.entity.Freelancer;
 import com.werow.web.account.entity.User;
-import com.werow.web.project.dto.ProjectDto;
+import com.werow.web.project.dto.ProjectResponseDto;
 import com.werow.web.project.entity.enums.ProjectStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +25,7 @@ public class Project {
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
+    private Integer price;
     @Column(nullable = false)
     private LocalDate startAt;
     private LocalDate endAt;
@@ -42,8 +43,8 @@ public class Project {
     @JoinColumn(name = "freelancer_id")
     private Freelancer freelancer;
 
-    public ProjectDto projectToDto() {
-        return new ProjectDto(this);
+    public ProjectResponseDto projectToDto() {
+        return new ProjectResponseDto(this);
     }
 
 }

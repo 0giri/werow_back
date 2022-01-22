@@ -28,6 +28,7 @@ public class Freelancer extends DateInfo {
     private String phone;
     @Lob
     private String introduce;
+    private String priceInfo;
     private String career;
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
@@ -48,6 +49,7 @@ public class Freelancer extends DateInfo {
     public Freelancer(RegRequest regRequest) {
         this.phone = regRequest.getPhone();
         this.introduce = regRequest.getIntroduce();
+        this.priceInfo = regRequest.getPriceInfo();
         this.career = regRequest.getCareer();
         this.kind = regRequest.getKind();
         initDateInfo();

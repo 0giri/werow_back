@@ -23,9 +23,7 @@ public class ProjectRequest extends DateInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer price;
     private String requestInfo;
-    private Boolean inOffice;
     private RequestStatus status;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

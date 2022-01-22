@@ -14,8 +14,10 @@ public class RegRequest {
     private String phone;
     @ApiModelProperty(example = "안녕하세요")
     private String introduce;
+    @ApiModelProperty(example = "축가 10만원, 레슨 회당 4만원 ~")
+    private String priceInfo;
     @ApiModelProperty(example = "경력 없음")
     private String career;
-    @ApiModelProperty(example = "IT")
+    @ApiModelProperty(example = "MUSIC")
     private BusinessKind kind;
 }

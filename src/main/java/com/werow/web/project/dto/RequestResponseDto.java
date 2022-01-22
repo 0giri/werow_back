@@ -13,18 +13,14 @@ public class RequestResponseDto {
     private Long requestId;
     private Long userId;
     private Long freelancerId;
-    private Integer price;
     private String requestInfo;
-    private Boolean inOffice;
     private RequestStatus status;
 
     public RequestResponseDto(ProjectRequest projectRequest) {
         this.requestId = projectRequest.getId();
         this.userId = projectRequest.getUser().getId();
         this.freelancerId = projectRequest.getFreelancer().getId();
-        this.price = projectRequest.getPrice();
         this.requestInfo = projectRequest.getRequestInfo();
-        this.inOffice = projectRequest.getInOffice();
         this.status = projectRequest.getStatus();
     }
 }

@@ -27,9 +27,7 @@ public class RequestService {
         User user = userService.getUserById(requestDto.getUserId());
         Freelancer freelancer = freelancerService.findFreelancerByUserId(requestDto.getFreelancerUserId());
         ProjectRequest projectRequest = ProjectRequest.builder()
-                .price(requestDto.getPrice())
                 .requestInfo(requestDto.getRequestInfo())
-                .inOffice(requestDto.getInOffice())
                 .status(RequestStatus.WAIT)
                 .user(user)
                 .freelancer(freelancer)

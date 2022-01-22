@@ -4,7 +4,6 @@ import com.werow.web.account.dto.FreelancerDto;
 import com.werow.web.account.dto.RegRequest;
 import com.werow.web.account.service.FreelancerService;
 import com.werow.web.auth.annotation.RoleFreelancer;
-import com.werow.web.auth.annotation.RoleManager;
 import com.werow.web.auth.annotation.RoleUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +35,7 @@ public class FreelancerController {
 
 
     // ------------------------------------ R ------------------------------------
-    @RoleManager
+//    @RoleManager
     @ApiOperation(value = "모든 프리랜서 조회", notes = "모든 프리랜서 정보 조회")
     @GetMapping
     public ResponseEntity<List<FreelancerDto>> getAllFreelancers() {
