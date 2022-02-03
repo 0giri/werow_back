@@ -5,6 +5,7 @@ import com.werow.web.account.dto.RegRequest;
 import com.werow.web.account.service.FreelancerService;
 import com.werow.web.auth.annotation.RoleFreelancer;
 import com.werow.web.auth.annotation.RoleUser;
+import com.werow.web.auth.dto.RefreshResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,9 @@ public class FreelancerController {
     @RoleUser
     @ApiOperation(value = "프리랜서 등록", notes = "프리랜서 등록 폼 기반 프리랜서 등록")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void regFreelancer(@RequestBody RegRequest regRequest) {
-        freelancerService.registerFreelancer(regRequest);
+    public ResponseEntity<RefreshResponse> regFreelancer(@RequestBody RegRequest regRequest) {
+        RefreshResponse refreshResponse = freelancerService.registerFreelancer(regRequest);
+        return ResponseEntity.ok(refreshResponse);
     }
 
 
@@ -59,7 +61,6 @@ public class FreelancerController {
         FreelancerDto findFreelancer = freelancerService.getFreelancerDtoByUserId(id);
         return ResponseEntity.ok(findFreelancer);
     }
-
 
     // ------------------------------------ U ------------------------------------
     @RoleFreelancer
