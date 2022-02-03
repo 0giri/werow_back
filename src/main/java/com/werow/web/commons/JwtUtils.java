@@ -93,14 +93,14 @@ public class JwtUtils implements InitializingBean {
      * 토큰 정보 반환
      */
     public TokenInfo getTokenInfo(HttpServletRequest request) {
-        String accessToken = getAccessToken(request);
-        return parseToken(accessToken);
+        String token = getPureToken(request);
+        return parseToken(token);
     }
 
     /**
      * Request의 Authorization 헤더에서 순수 토큰값만 추출
      */
-    public String getAccessToken(HttpServletRequest request) {
+    public String getPureToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (!StringUtils.hasText(bearerToken)) {
             throw new NotEnoughAuthorityException("JWT 토큰이 없습니다.");
@@ -114,12 +114,12 @@ public class JwtUtils implements InitializingBean {
     /**
      * 토큰을 검증하고 파싱하여 토큰 정보 DTO로 변환
      */
-    private TokenInfo parseToken(String accessToken) {
+    private TokenInfo parseToken(String token) {
         try {
             Claims body = Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
-                    .parseClaimsJws(accessToken)
+                    .parseClaimsJws(token)
                     .getBody();
 
             String tokenType = body.get("tokenType", String.class);

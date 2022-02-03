@@ -10,7 +10,10 @@ import com.werow.web.auth.dto.LoginRequest;
 import com.werow.web.auth.dto.LoginResponse;
 import com.werow.web.auth.dto.TokenInfo;
 import com.werow.web.commons.JwtUtils;
-import com.werow.web.exception.*;
+import com.werow.web.exception.DuplicatedUniqueException;
+import com.werow.web.exception.NotEnoughAuthorityException;
+import com.werow.web.exception.NotExistResourceException;
+import com.werow.web.exception.NotMatchPassword;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -57,6 +60,7 @@ public class UserService {
     /**
      * ID로 유저 조회
      */
+    @Transactional(readOnly = true)
     public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new NotExistResourceException("해당 ID를 가진 유저가 존재하지 않습니다."));
@@ -124,6 +128,21 @@ public class UserService {
     }
 
     /**
+     * 중복 회원 검사
+     */
+    private void validateDuplicateUser(JoinRequest joinRequest) {
+        Optional<User> findUserByEmailOrNickname =
+                userRepository.findByEmailOrNickname(joinRequest.getEmail(), joinRequest.getNickname());
+        if (findUserByEmailOrNickname.isPresent()) {
+            User findUser = findUserByEmailOrNickname.get();
+            if (joinRequest.getEmail().equals(findUser.getEmail())) {
+                throw new DuplicatedUniqueException("이미 존재하는 이메일입니다.");
+            }
+            throw new DuplicatedUniqueException("이미 존재하는 닉네임입니다.");
+        }
+    }
+
+    /**
      * 유저 엔티티 리스트를 유저 DTO 리스트로 변환
      */
     @Transactional(readOnly = true)
@@ -151,21 +170,6 @@ public class UserService {
     public void checkPassword(String checkPassword, String currentPassword) {
         if (!BCrypt.checkpw(checkPassword, currentPassword)) {
             throw new NotMatchPassword("비밀번호가 일치하지 않습니다.");
-        }
-    }
-
-    /**
-     * 중복 회원 검사
-     */
-    private void validateDuplicateUser(JoinRequest joinRequest) {
-        Optional<User> findUserByEmailOrNickname =
-                userRepository.findByEmailOrNickname(joinRequest.getEmail(), joinRequest.getNickname());
-        if (findUserByEmailOrNickname.isPresent()) {
-            User findUser = findUserByEmailOrNickname.get();
-            if (joinRequest.getEmail().equals(findUser.getEmail())) {
-                throw new DuplicatedUniqueException("이미 존재하는 이메일입니다.");
-            }
-            throw new DuplicatedUniqueException("이미 존재하는 닉네임입니다.");
         }
     }
 
