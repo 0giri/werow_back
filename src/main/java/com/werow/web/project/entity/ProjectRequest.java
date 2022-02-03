@@ -6,7 +6,6 @@ import com.werow.web.account.entity.User;
 import com.werow.web.commons.DateInfo;
 import com.werow.web.project.dto.RequestResponseDto;
 import com.werow.web.project.entity.enums.RequestStatus;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,8 +14,6 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class ProjectRequest extends DateInfo {
 
@@ -33,6 +30,15 @@ public class ProjectRequest extends DateInfo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "freelancer_id")
     private Freelancer freelancer;
+
+    @Builder
+    public ProjectRequest(String requestInfo, RequestStatus status, User user, Freelancer freelancer) {
+        this.requestInfo = requestInfo;
+        this.status = status;
+        this.user = user;
+        this.freelancer = freelancer;
+        initDateInfo();
+    }
 
     public RequestResponseDto requestToResponseDto() {
         return new RequestResponseDto(this);
