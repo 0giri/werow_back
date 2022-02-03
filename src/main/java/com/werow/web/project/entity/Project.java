@@ -3,6 +3,7 @@ package com.werow.web.project.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.werow.web.account.entity.Freelancer;
 import com.werow.web.account.entity.User;
+import com.werow.web.exception.BadValueException;
 import com.werow.web.project.dto.ProjectResponseDto;
 import com.werow.web.project.entity.enums.ProjectStatus;
 import lombok.AllArgsConstructor;
@@ -15,12 +16,12 @@ import java.time.LocalDate;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Project {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
@@ -43,8 +44,28 @@ public class Project {
     @JoinColumn(name = "freelancer_id")
     private Freelancer freelancer;
 
+    @Builder
+    public Project(LocalDate startAt, ProjectRequest projectRequest, User user, Freelancer freelancer) {
+        this.startAt = startAt;
+        this.projectRequest = projectRequest;
+        this.user = user;
+        this.freelancer = freelancer;
+        initStatus(startAt, LocalDate.now());
+    }
+
     public ProjectResponseDto projectToDto() {
         return new ProjectResponseDto(this);
+    }
+
+    private void initStatus(LocalDate startAt, LocalDate now) {
+        ProjectStatus status = ProjectStatus.YET;
+        if (startAt.isBefore(now)) {
+            throw new BadValueException("시작일은 오늘부터 설정 가능합니다.");
+        }
+        if (startAt.equals(now)) {
+            status = ProjectStatus.ON;
+        }
+        this.status = status;
     }
 
 }

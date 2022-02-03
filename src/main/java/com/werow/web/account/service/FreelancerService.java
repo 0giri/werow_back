@@ -6,7 +6,9 @@ import com.werow.web.account.entity.Freelancer;
 import com.werow.web.account.entity.User;
 import com.werow.web.account.repository.FreelancerRepository;
 import com.werow.web.account.repository.UserRepository;
+import com.werow.web.auth.dto.RefreshResponse;
 import com.werow.web.auth.dto.TokenInfo;
+import com.werow.web.auth.service.LoginService;
 import com.werow.web.commons.JwtUtils;
 import com.werow.web.exception.NotExistResourceException;
 import lombok.RequiredArgsConstructor;
@@ -26,17 +28,20 @@ public class FreelancerService {
     private final HttpServletRequest request;
     private final FreelancerRepository freelancerRepository;
     private final UserRepository userRepository;
+    private final LoginService loginService;
 
     /**
      * 유저를 프리랜서로 등록
      */
-    public void registerFreelancer(RegRequest regRequest) {
+    public RefreshResponse registerFreelancer(RegRequest regRequest) {
         TokenInfo tokenInfo = jwtUtils.getTokenInfo(request);
         User findUser = userRepository.findById(tokenInfo.getId()).orElseThrow(
                 () -> new NotExistResourceException("해당 ID를 가진 유저가 존재하지 않습니다."));
         Freelancer freelancer = new Freelancer(regRequest);
         findUser.regFreelancer(freelancer);
         freelancerRepository.save(freelancer);
+        String accessToken = jwtUtils.createAccessToken(findUser);
+        return new RefreshResponse(accessToken);
     }
 
     /**

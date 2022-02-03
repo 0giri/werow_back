@@ -45,7 +45,7 @@ public class User extends DateInfo {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "freelancer_id", foreignKey = @ForeignKey(name = "fk_user_to_freelancer"))
     private Freelancer freelancer;
 
@@ -91,6 +91,14 @@ public class User extends DateInfo {
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
         updateModifiedDate();
+    }
+
+
+    /**
+     * 유저의 권한 인증 프로바이더 변경
+     */
+    public void setProvider(AuthProvider provider) {
+        this.provider = provider;
     }
 
     /**
