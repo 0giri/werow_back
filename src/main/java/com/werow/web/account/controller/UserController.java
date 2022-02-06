@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final UserService userService;
+    private final HttpServletRequest request;
 
     // ------------------------------------ C ------------------------------------
     @ApiOperation(value = "유저 등록", notes = "새로운 유저 등록")
@@ -58,6 +60,7 @@ public class UserController {
     @ApiOperation(value = "유저 조회 (토큰)", notes = "현재 요청에 담긴 토큰의 소유자 정보 조회")
     @GetMapping("/token")
     public ResponseEntity<UserDto> getUserInfoByToken() {
+        System.out.println(request.getHeader("Authorization")); // @@@
         User findUser = userService.getUserByToken();
         return ResponseEntity.ok(findUser.userToDto());
     }
@@ -107,7 +110,7 @@ public class UserController {
 
     @RoleUser
     @ApiOperation(value = "유저 비밀번호 변경 (ID)", notes = "ID로 유저 조회하여 비밀번호 변경")
-    @PatchMapping(value = "/{id}/password",consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/{id}/password", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void changePassword(@PathVariable Long id, @RequestBody PasswordChangeDto passwordDto) {
         userService.changePassword(id, passwordDto);
     }

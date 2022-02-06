@@ -45,6 +45,8 @@ public class AuthAspect {
      * 토큰 검증
      */
     private void checkRole(Role role) {
+        System.out.println(request.getHeader("Authorization")); //@@@
+
         TokenInfo tokenInfo = jwtUtils.getTokenInfo(request);
         String tokenType = tokenInfo.getTokenType();
         if (!tokenType.equals(JwtUtils.ACCESS)) {
