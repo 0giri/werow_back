@@ -31,11 +31,12 @@ public class FrontLoginController {
         String serverHostName = httpUtils.getServerHostName(request);
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("client_id", "e485731066d013c1fc6faaf79bfc6d04");
-        paramsMap.put("redirect_uri", serverHostName + "/api/login/kakao");
+        paramsMap.put("redirect_uri", serverHostName + "/api/oauth2/kakao");
         paramsMap.put("response_type", "code");
         String queryString = httpUtils.mapToQueryString(paramsMap);
-
+        System.out.println(queryString);
         return "redirect:" + url + queryString;
+
     }
 
 }
