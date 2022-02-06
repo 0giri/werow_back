@@ -1,7 +1,7 @@
 oauth2:
   kakao:
     grant-type: authorization_code
-    client-id: e485731066d013c1fc6faaf79bfc6d04
+    client-id: b49d403eab459f2dcb5d7b635c14139b
     redirect-url: http://localhost:8080/api/oauth2/kakao
     base-url: https://kauth.kakao.com/oauth/token
     user-info-url: https://kapi.kakao.com/v2/user/me
