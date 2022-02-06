@@ -25,7 +25,6 @@ public class AuthController {
     @ApiOperation(value = "카카오 로그인", notes = "code로 카카오의 회원 정보를 조회하고, 이 정보와 일치하는 유저가 있다면 로그인 처리, 없다면 카카오 회원 정보 반환")
     @GetMapping(value = "/oauth2/kakao")
     public ResponseEntity<OAuth2Response> kakaoLogin(String code) {
-        System.out.println(code);
         OAuth2UserInfo kakaoUserInfo = KakaoService.getUserInfo(code);
         OAuth2Response oAuth2Response = loginService.oAuth2Login(kakaoUserInfo);
         return ResponseEntity.ok(oAuth2Response);
