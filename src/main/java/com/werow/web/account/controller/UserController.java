@@ -60,7 +60,6 @@ public class UserController {
     @ApiOperation(value = "유저 조회 (토큰)", notes = "현재 요청에 담긴 토큰의 소유자 정보 조회")
     @GetMapping("/token")
     public ResponseEntity<UserDto> getUserInfoByToken() {
-        System.out.println(request.getHeader("Authorization")); // @@@
         User findUser = userService.getUserByToken();
         return ResponseEntity.ok(findUser.userToDto());
     }

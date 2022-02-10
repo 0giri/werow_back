@@ -28,7 +28,7 @@ public class LoginService {
         Optional<User> findUser = userRepository.findByEmail(userInfo.getEmail());
         if (findUser.isPresent()) {
             LoginResponse loginResponse = loginProcess(findUser.get());
-            return new OAuth2Response(loginResponse);
+            return new OAuth2Response(userInfo, loginResponse);
         }
         return new OAuth2Response(userInfo);
     }

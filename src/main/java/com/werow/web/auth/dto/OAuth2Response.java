@@ -19,7 +19,10 @@ public class OAuth2Response {
     private String photo;
     private AuthProvider provider;
 
-    public OAuth2Response(LoginResponse loginResponse) {
+    public OAuth2Response(OAuth2UserInfo userInfo, LoginResponse loginResponse) {
+        this.email = userInfo.getEmail();
+        this.photo = userInfo.getPhoto();
+        this.provider = userInfo.getProvider();
         this.isMember = true;
         this.id = loginResponse.getId();
         this.accessToken = loginResponse.getAccessToken();
